@@ -30,5 +30,14 @@
     "locationAddress": "Cochabamba, Bolivia",
     "farewellMessage": "With love, we hope to see you soon",
     "invitationLink": "View invitation"
+  },
+  "christmasInvitation": {
+    "title": "Merry Christmas",
+    "subtitle": "We invite you to celebrate",
+    "welcomeMessage": "Welcome to the most magical time of the year. Let us celebrate Christmas together.",
+    "countdownLabel": "Countdown",
+    "targetDateLabel": "December 25, 2026",
+    "farewellMessage": "See you soon and happy holidays! May the magic of Christmas be with you.",
+    "invitationLink": "View Christmas invitation"
   }
 }
