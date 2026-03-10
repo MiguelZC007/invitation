@@ -1,0 +1,40 @@
+# Dependencies
+node_modules
+.pnpm-store
+
+# Next / build
+.next
+out
+
+# Testing / coverage
+coverage
+*.lcov
+
+# Env
+.env
+.env.local
+.env.*.local
+
+# IDE / OS
+.idea
+.vscode/*
+!.vscode/settings.json
+!.vscode/extensions.json
+*.log
+.DS_Store
+Thumbs.db
+
+# Vercel
+.vercel
+
+# Debug
+npm-debug.log*
+pnpm-debug.log*
+
+# TypeScript
+*.tsbuildinfo
+next-env.d.ts
+
+# Misc
+*.pem
+plans/
