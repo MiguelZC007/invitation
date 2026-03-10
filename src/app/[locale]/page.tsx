@@ -16,17 +16,26 @@ export default async function HomePage({ params }: Props) {
 function HomeContent() {
   const t = useTranslations("common");
   const tf = useTranslations("fairyTaleWedding");
+  const tc = useTranslations("christmasInvitation");
 
   return (
     <main className="flex min-h-screen flex-col items-center justify-center gap-6 p-8">
       <h1 className="text-4xl font-bold text-primary">{t("title")}</h1>
       <p className="text-lg text-muted">{t("welcome")}</p>
-      <Link
-        href="/invitation/fairy-tale-wedding"
-        className="rounded-lg bg-amber-600 px-6 py-3 font-medium text-white hover:bg-amber-700"
-      >
-        {tf("invitationLink")}
-      </Link>
+      <div className="flex flex-wrap justify-center gap-4">
+        <Link
+          href="/invitation/fairy-tale-wedding"
+          className="rounded-lg bg-amber-600 px-6 py-3 font-medium text-white hover:bg-amber-700"
+        >
+          {tf("invitationLink")}
+        </Link>
+        <Link
+          href="/invitation/christmas"
+          className="rounded-lg bg-red-600 px-6 py-3 font-medium text-white hover:bg-red-700"
+        >
+          {tc("invitationLink")}
+        </Link>
+      </div>
     </main>
   );
 }

@@ -30,5 +30,14 @@
     "locationAddress": "Cochabamba, Bolivia",
     "farewellMessage": "Con cariño, esperamos verte pronto",
     "invitationLink": "Ver invitación"
+  },
+  "christmasInvitation": {
+    "title": "Feliz Navidad",
+    "subtitle": "Te invitamos a celebrar",
+    "welcomeMessage": "Bienvenido a la época más mágica del año. Celebremos juntos la Navidad.",
+    "countdownLabel": "Faltan",
+    "targetDateLabel": "25 de diciembre de 2026",
+    "farewellMessage": "¡Hasta pronto y felices fiestas! Que la magia de la Navidad te acompañe.",
+    "invitationLink": "Ver invitación navideña"
   }
 }
