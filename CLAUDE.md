@@ -92,6 +92,8 @@ Si el usuario pide algo equivalente (p.ej. "añade un Botón", "crea la rama fea
 
 Delegar para tareas focalizadas. No modificar código en code-reviewer, git-ops ni design-verifier.
 
+Cursor tiene los mismos agents en `.cursor/agents/`; delegar con `mcp_task` + `subagent_type`.
+
 ## Critical rules (always enforced)
 
 ### Invitation context (OBLIGATORIO)

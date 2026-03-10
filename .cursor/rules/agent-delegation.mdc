@@ -1,5 +1,5 @@
 ---
-description: When to delegate to code-reviewer, test-writer, or git-ops subagents via mcp_task
+description: When to delegate to code-reviewer, test-writer, git-ops, ui-designer, svg-designer, or design-verifier subagents via mcp_task
 alwaysApply: true
 ---
 
@@ -24,14 +24,18 @@ Si el agente va a ejecutar un **plan** o cualquier tarea de edición: verificar 
 | Code review | `code-reviewer` | User asks for code review, quality check, or validation before commit |
 | Write/fix tests | `test-writer` | User needs comprehensive tests, coverage improvement, or failing test fixes |
 | Git operations | `git-ops` | User needs branching, conventional commits, or merge to develop |
-| Design audit | `generalPurpose` | User asks to verify design UI/UX only. Prompt: apply design-audit skill, no code changes |
+| Implement UI/UX design | `ui-designer` | User needs to implement or correct design in components, templates, or tokens |
+| Create/modify SVG | `svg-designer` | User needs SVG icons, illustrations, or decorative elements |
+| Design audit | `design-verifier` | User asks to verify design UI/UX only. Read-only, no code changes |
 
 ## Usage
 
 - **code-reviewer**: Read-only review. Does not modify code. Runs lint + tests and reports issues.
 - **test-writer**: Creates or fixes tests. Uses Vitest + RTL patterns. Can read, write, edit, run bash.
 - **git-ops**: Manages git only. Never modifies source. Handles branch creation, commits, merges.
-- **generalPurpose** (design audit): Read-only. Applies design-audit checklist. Reports palette, contrast, responsive. Does not run lint/tests/build.
+- **ui-designer**: Implements design system. Follows ui-design skill. Can read, write, edit.
+- **svg-designer**: Implements SVG graphics. Follows svg-design skill. Can read, write, edit.
+- **design-verifier**: Read-only design audit. Applies design-audit checklist. Reports palette, contrast, responsive. Does not run lint/tests/build.
 
 ## Skills that may delegate
 
@@ -39,4 +43,6 @@ Si el agente va a ejecutar un **plan** o cualquier tarea de edición: verificar 
 - `/test`: delegate to test-writer for comprehensive test coverage
 - `/validate`: can delegate to code-reviewer for full review + validation
 - `/task` and `/finish`: git-ops handles branching and merges; main agent can also execute directly per skill steps
-- Design verification: delegate to generalPurpose with design-audit prompt (Claude: use design-verifier agent)
+- ui-design skill: delegate to ui-designer for design implementation
+- svg-design skill: delegate to svg-designer for SVG work
+- Design verification: delegate to design-verifier for design audit

@@ -12,7 +12,7 @@ Aplicar sin esperar `/command`:
 
 2. **Skills**: Cuando la intención encaje con la `description` del skill, leer `.cursor/skills/<nombre>/SKILL.md` y seguir los pasos.
 
-3. **Agents**: Usar `mcp_task` con `subagent_type` cuando la tarea requiera especialista (review, tests, git).
+3. **Agents**: Usar `mcp_task` con `subagent_type` cuando la tarea requiera especialista (review, tests, git, diseño, SVG).
 
 ## Ubicaciones
 
@@ -20,7 +20,7 @@ Aplicar sin esperar `/command`:
 |---------|-----------------------------------|-------------------------------------------|
 | Rules   | `.cursor/rules/*.mdc`             | Por globs o description (Cursor)          |
 | Skills  | `.cursor/skills/<nombre>/SKILL.md`| Por intención = description del skill     |
-| Agents  | `mcp_task` + `subagent_type`      | code-reviewer | test-writer | git-ops           |
+| Agents  | `.cursor/agents/<nombre>.md`       | mcp_task + subagent_type                  |
 
 ## Workflow
 
@@ -78,12 +78,14 @@ Si el usuario pide "añade un Botón" o "crea feat/button", aplicar el skill sin
 
 ## Delegación a agents (mcp_task)
 
-| Tarea                    | subagent_type   |
-|---------------------------|-----------------|
-| Revisar código            | `code-reviewer` |
-| Escribir/corregir tests   | `test-writer`   |
-| Branching, commits, merge | `git-ops`       |
-| Verificar diseño UI/UX    | `generalPurpose` con prompt design-audit |
+| Tarea                     | subagent_type     |
+|----------------------------|-------------------|
+| Revisar código             | `code-reviewer`   |
+| Escribir/corregir tests    | `test-writer`     |
+| Branching, commits, merge  | `git-ops`         |
+| Implementar diseño UI/UX   | `ui-designer`     |
+| Crear/modificar SVG        | `svg-designer`    |
+| Verificar diseño UI/UX     | `design-verifier` |
 
 Usar cuando la tarea requiera especialista aislado, sin que el usuario lo pida.
 
