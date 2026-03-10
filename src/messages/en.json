@@ -19,5 +19,25 @@
     "welcome": "You're invited!",
     "details": "Event details",
     "confirm": "Will you join us?"
+  },
+  "fairyTaleWedding": {
+    "title": "My fairy tale wedding",
+    "subtitle": "We invite you to live this story with us",
+    "welcomeMessage": "Welcome to our celebration",
+    "countdownLabel": "Countdown",
+    "targetDateLabel": "March 31, 2026",
+    "locationName": "Cochabamba",
+    "locationAddress": "Cochabamba, Bolivia",
+    "farewellMessage": "With love, we hope to see you soon",
+    "invitationLink": "View invitation"
+  },
+  "christmasInvitation": {
+    "title": "Merry Christmas",
+    "subtitle": "We invite you to celebrate",
+    "welcomeMessage": "Welcome to the most magical time of the year. Let us celebrate Christmas together.",
+    "countdownLabel": "Countdown",
+    "targetDateLabel": "December 25, 2026",
+    "farewellMessage": "See you soon and happy holidays! May the magic of Christmas be with you.",
+    "invitationLink": "View Christmas invitation"
   }
 }

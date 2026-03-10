@@ -6,6 +6,8 @@ type LocationBlockProps = {
   address: string;
   mapUrl?: string;
   className?: string;
+  captionClassName?: string;
+  linkClassName?: string;
 };
 
 export function LocationBlock({
@@ -13,6 +15,8 @@ export function LocationBlock({
   address,
   mapUrl,
   className = "",
+  captionClassName = "",
+  linkClassName = "text-sm text-primary underline hover:text-primary-dark",
 }: LocationBlockProps) {
   return (
     <div
@@ -30,7 +34,7 @@ export function LocationBlock({
           {name}
         </Text>
       </div>
-      <Text variant="caption" as="p">
+      <Text variant="caption" as="p" className={captionClassName}>
         {address}
       </Text>
       {mapUrl && (
@@ -38,7 +42,7 @@ export function LocationBlock({
           href={mapUrl}
           target="_blank"
           rel="noopener noreferrer"
-          className="text-sm text-primary underline hover:text-primary-dark"
+          className={linkClassName}
         >
           Ver mapa
         </a>

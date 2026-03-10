@@ -19,5 +19,25 @@
     "welcome": "¡Estás invitado!",
     "details": "Detalles del evento",
     "confirm": "¿Nos acompañas?"
+  },
+  "fairyTaleWedding": {
+    "title": "Mi boda de cuento de hadas",
+    "subtitle": "Te invitamos a vivir con nosotros esta historia",
+    "welcomeMessage": "Bienvenido a nuestra celebración",
+    "countdownLabel": "Faltan",
+    "targetDateLabel": "31 de marzo de 2026",
+    "locationName": "Cochabamba",
+    "locationAddress": "Cochabamba, Bolivia",
+    "farewellMessage": "Con cariño, esperamos verte pronto",
+    "invitationLink": "Ver invitación"
+  },
+  "christmasInvitation": {
+    "title": "Feliz Navidad",
+    "subtitle": "Te invitamos a celebrar",
+    "welcomeMessage": "Bienvenido a la época más mágica del año. Celebremos juntos la Navidad.",
+    "countdownLabel": "Faltan",
+    "targetDateLabel": "25 de diciembre de 2026",
+    "farewellMessage": "¡Hasta pronto y felices fiestas! Que la magia de la Navidad te acompañe.",
+    "invitationLink": "Ver invitación navideña"
   }
 }

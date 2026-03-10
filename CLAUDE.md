@@ -1,18 +1,131 @@
-# Claude Code Rules
+# Invitation Project — Orchestration Guide
 
-## Imports
+Orquestador para Claude Code. Indica dónde están rules, skills y agents y cómo usarlos automáticamente.
 
-- **No barrel exports**: nunca crear archivos `index.ts` que re-exporten módulos. Importar siempre desde la ruta directa del archivo.
-  - Correcto: `import { Button } from "@/components/atoms/Button"`
-  - Incorrecto: `import { Button } from "@/components/atoms"`
-- Esto aplica a todos los directorios: `components/`, `templates/`, `theme/`, etc.
-- La regla está reforzada con `no-restricted-imports` en ESLint.
+Referencia unificada: [AGENTS.md](AGENTS.md). Cursor: [CURSOR.md](CURSOR.md).
 
-## Package manager
+## Uso automático
 
-- Solo pnpm. No usar npm ni yarn.
+Aplicar los sistemas sin esperar invocación explícita (`/task`, etc.):
 
-## Testing
+1. **Rules**: Se cargan solas al editar archivos que coinciden con los globs. No invocar manualmente.
 
-- Vitest + React Testing Library. Tests junto al componente (`*.test.tsx`).
-- `pnpm test:run` para una pasada, `pnpm coverage` para cobertura con umbrales.
+2. **Skills**: Cuando la intención del usuario encaje con el workflow (crear componente, rama, template, tests, validar, mergear), leer y seguir el `SKILL.md` correspondiente en `.claude/skills/<nombre>/`.
+
+3. **Agents**: Cuando la tarea requiera un especialista (revisión, tests complejos, git), delegar al agent indicado en `.claude/agents/`.
+
+## Ubicaciones
+
+| System    | Location                  | Activación automática                    |
+|-----------|---------------------------|------------------------------------------|
+| Rules     | `.claude/rules/*.md`      | Por globs según archivos en contexto     |
+| Skills    | `.claude/skills/<nombre>/SKILL.md` | Por intención del usuario = description |
+| Agents    | `.claude/agents/<nombre>.md`       | Por delegación cuando la tarea lo pida   |
+| Hooks     | `.claude/settings.json`   | PreToolUse, Stop (automáticos)            |
+
+## Workflow
+
+```
+/task feat/my-feature     →  creates branch from develop
+  ↓
+New invitation: invitation-context (MANDATORY) → template  (without full context, DO NOT start)
+  ↓
+/component atom Button    →  creates component + tests + commit
+/template GalaInvitation  →  creates template + route + commit (requires invitation-context first)
+/test Button              →  writes/runs tests + commit
+  ↓
+/validate                 →  lint + ALL tests + coverage + build
+  ↓
+/finish                   →  validates everything → merge to develop
+```
+
+Always start from `develop`. Never commit to `main` or `develop` directly.
+
+**Invitation context:** Before any invitation task: run `invitation-context`. Without full user context, DO NOT start. The AI must not assume; always ask.
+
+## Rules (auto-loaded)
+
+| Rule       | Archivo                 | Scope              |
+|------------|-------------------------|--------------------|
+| nextjs     | `.claude/rules/nextjs.md`    | `src/app/**`       |
+| react      | `.claude/rules/react.md`     | `*.tsx`            |
+| testing    | `.claude/rules/testing.md`  | `*.test.*`         |
+| styling    | `.claude/rules/styling.md`  | `*.tsx`, `*.css`   |
+| imports    | `.claude/rules/imports.md`  | global             |
+| typescript | `.claude/rules/typescript.md`| `*.ts`, `*.tsx`    |
+| i18n       | `.claude/rules/i18n.md`     | `*.ts`, `*.tsx`, `*.json` |
+| responsive-design | `.claude/rules/responsive-design.md` | `*.tsx`, `*.css` |
+| ui-design | `.claude/rules/ui-design.md` | `*.tsx`, `*.css`, `src/theme/**` |
+| svg-design | `.claude/rules/svg-design.md` | `src/**/*.{tsx,svg}` |
+| git-workflow | `.claude/rules/git-workflow.md` | global     |
+| invitation-checklist | `.claude/rules/invitation-checklist.md` | global (no suposición; preguntar antes de implementar invitaciones) |
+
+Cargar automáticamente al editar archivos que coincidan. No invocar.
+
+## Skills (aplicar por intención)
+
+| Intención                    | Skill path                     | Acción                                      |
+|-----------------------------|---------------------------------|---------------------------------------------|
+| Crear rama, empezar tarea   | `.claude/skills/task/SKILL.md`   | Branch desde develop                        |
+| Obtener contexto invitación | `.claude/skills/invitation-context/SKILL.md` | OBLIGATORIO antes de template. Sin contexto, no iniciar. |
+| Añadir/modificar componente | `.claude/skills/component/SKILL.md` | Componente + tests + commit                 |
+| Añadir/modificar template   | `.claude/skills/template/SKILL.md` | Template + ruta + commit (requiere invitation-context previo) |
+| Escribir o corregir tests   | `.claude/skills/test/SKILL.md`    | Tests + commit                              |
+| Validar proyecto            | `.claude/skills/validate/SKILL.md` | lint + tests + coverage + build            |
+| Finalizar, mergear          | `.claude/skills/finish/SKILL.md`   | Validar + merge a develop                    |
+| Implementar/corregir diseño UI/UX | `.claude/skills/ui-design/SKILL.md` | Aplicar buenas prácticas de diseño     |
+| Crear/modificar SVG, iconos, ilustraciones | `.claude/skills/svg-design/SKILL.md` | Buenas prácticas SVG inline          |
+| Verificar diseño UI/UX      | `.claude/skills/design-audit/SKILL.md` | Auditar paleta, contraste, responsive  |
+
+Si el usuario pide algo equivalente (p.ej. "añade un Botón", "crea la rama feat/button"), leer el SKILL.md y ejecutarlo. No esperar a `/command`.
+
+## Agents (delegar cuando convenga)
+
+| Agent           | Archivo                      | Delegar cuando                               |
+|-----------------|------------------------------|----------------------------------------------|
+| code-reviewer   | `.claude/agents/code-reviewer.md`   | Review, validar calidad, lint/tests    |
+| test-writer     | `.claude/agents/test-writer.md`      | Tests complejos, cobertura, fixes       |
+| git-ops         | `.claude/agents/git-ops.md`          | Branch, commit, merge                    |
+| ui-designer     | `.claude/agents/ui-designer.md`      | Implementar/corregir diseño UI/UX       |
+| svg-designer    | `.claude/agents/svg-designer.md`     | Implementar/modificar SVG, iconos, ilustraciones |
+| design-verifier | `.claude/agents/design-verifier.md`  | Verificar solo diseño UI/UX (no modifica) |
+
+Delegar para tareas focalizadas. No modificar código en code-reviewer, git-ops ni design-verifier.
+
+Cursor tiene los mismos agents en `.cursor/agents/`; delegar con `mcp_task` + `subagent_type`.
+
+## Critical rules (always enforced)
+
+### Invitation context (OBLIGATORIO)
+- No suponer. Antes de implementar una invitación: ejecutar `invitation-context` y obtener toda la información del usuario.
+- Sin contexto completo, NO iniciar la tarea de template.
+
+### Git workflow (OBLIGATORIO)
+- Antes de cualquier edit o plan: `git branch --show-current`. Si `main` o `develop`, crear rama feature primero. NUNCA editar en develop.
+
+### Imports
+- **No barrel exports**: never create `index.ts` re-export files.
+- Import from direct path: `import { Button } from "@/components/atoms/Button"`.
+- Enforced by ESLint `no-restricted-imports`.
+
+### Package manager
+- **Only pnpm**. Never npm or yarn.
+
+### Testing
+- Vitest + React Testing Library. Tests colocated: `*.test.tsx`.
+- Run ALL tests before any commit: `pnpm test:run`.
+- Coverage thresholds: 80% (lines, functions, branches, statements).
+
+### Git workflow
+- Branch from `develop`, merge back to `develop` with `--no-ff`.
+- Conventional commits: `feat:`, `fix:`, `refactor:`, `test:`, `docs:`, `chore:`.
+- Pre-merge: lint + ALL tests + coverage + build must pass.
+- Never push automatically. User decides when to push.
+
+### Code standards
+- TypeScript strict: no `any`. Props as `type`, not `interface`.
+- React 19: no `forwardRef`, no `React.FC`. Named exports only.
+- Next.js 16: `await params`, `setRequestLocale()`, `"use client"` only when needed.
+- Tailwind: static utility classes. No dynamic class interpolation.
+- Motion: import from `motion/react`, use presets from `@/theme/animationPresets`.
+- Accessibility: semantic HTML, ARIA roles, keyboard support.
