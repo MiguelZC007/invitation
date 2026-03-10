@@ -11,7 +11,8 @@ El agente debe detectar la intención del usuario y aplicar los sistemas corresp
 | Intención detectada | Acción automática |
 |--------------------|-------------------|
 | Usuario edita `src/app/**`, `*.tsx`, `*.test.*`, etc. | Reglas aplican por glob — leer `.cursor/rules/*.mdc` o `.claude/rules/*.md` según el entorno |
-| Usuario pide crear rama, componente, template, tests, validar o mergear | Aplicar skill correspondiente — leer `SKILL.md` de la carpeta indicada |
+| Usuario pide **nueva invitación** o crear/modificar template | PRIMERO `invitation-context` (obtener información). Sin contexto completo, NO iniciar. Luego `template`. |
+| Usuario pide crear rama, componente, tests, validar o mergear | Aplicar skill correspondiente — leer `SKILL.md` de la carpeta indicada |
 | Usuario pide revisión de código, tests complejos, o operaciones git | Delegar a agent — `mcp_task` (Cursor) con `subagent_type` adecuado |
 
 No esperar a que el usuario escriba `/task` o `/component`. Si dice "añade un botón" o "crea la rama feat/button", aplicar el skill directamente.
@@ -124,14 +125,16 @@ src/
 7. **Conventional commits** in English: `feat:`, `fix:`, `refactor:`, `test:`, `docs:`, `chore:`.
 8. **TypeScript strict**: no `any`, no type assertions without justification.
 9. **Accessible by default**: semantic HTML, ARIA, keyboard support.
+10. **Invitation context**: No suponer. Antes de implementar una invitación, ejecutar `invitation-context` y obtener toda la información del usuario. Sin contexto completo, NO iniciar la tarea.
 
 ## Mapeo: intención → skill → agent
 
 | Intención del usuario | Skill a aplicar | Delegar a agent cuando |
 |-----------------------|-----------------|-------------------------|
 | Crear rama, empezar tarea | `task` → `.cursor/skills/task/` | git-ops para operaciones git |
+| **Añadir nueva invitación** | PRIMERO `invitation-context` (obligatorio), luego `template` | test-writer si tests complejos |
 | Añadir/modificar componente | `component` → `.cursor/skills/component/` | test-writer si tests complejos |
-| Añadir/modificar template | `template` → `.cursor/skills/template/` | test-writer si tests complejos |
+| Añadir/modificar template | `template` → `.cursor/skills/template/` (requiere contexto de invitation-context) | test-writer si tests complejos |
 | Escribir o corregir tests | `test` → `.cursor/skills/test/` | test-writer para cobertura amplia |
 | Revisar código, validar calidad | `validate` → `.cursor/skills/validate/` | code-reviewer para review completo |
 | Finalizar, mergear a develop | `finish` → `.cursor/skills/finish/` | git-ops para merge |
