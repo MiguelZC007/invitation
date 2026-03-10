@@ -28,8 +28,10 @@ Aplicar los sistemas sin esperar invocación explícita (`/task`, etc.):
 ```
 /task feat/my-feature     →  creates branch from develop
   ↓
+New invitation: invitation-context (MANDATORY) → template  (without full context, DO NOT start)
+  ↓
 /component atom Button    →  creates component + tests + commit
-/template GalaInvitation  →  creates template + route + commit
+/template GalaInvitation  →  creates template + route + commit (requires invitation-context first)
 /test Button              →  writes/runs tests + commit
   ↓
 /validate                 →  lint + ALL tests + coverage + build
@@ -38,6 +40,8 @@ Aplicar los sistemas sin esperar invocación explícita (`/task`, etc.):
 ```
 
 Always start from `develop`. Never commit to `main` or `develop` directly.
+
+**Invitation context:** Before any invitation task: run `invitation-context`. Without full user context, DO NOT start. The AI must not assume; always ask.
 
 ## Rules (auto-loaded)
 
@@ -54,6 +58,7 @@ Always start from `develop`. Never commit to `main` or `develop` directly.
 | ui-design | `.claude/rules/ui-design.md` | `*.tsx`, `*.css`, `src/theme/**` |
 | svg-design | `.claude/rules/svg-design.md` | `src/**/*.{tsx,svg}` |
 | git-workflow | `.claude/rules/git-workflow.md` | global     |
+| invitation-checklist | `.claude/rules/invitation-checklist.md` | global (no suposición; preguntar antes de implementar invitaciones) |
 
 Cargar automáticamente al editar archivos que coincidan. No invocar.
 
@@ -62,8 +67,9 @@ Cargar automáticamente al editar archivos que coincidan. No invocar.
 | Intención                    | Skill path                     | Acción                                      |
 |-----------------------------|---------------------------------|---------------------------------------------|
 | Crear rama, empezar tarea   | `.claude/skills/task/SKILL.md`   | Branch desde develop                        |
+| Obtener contexto invitación | `.claude/skills/invitation-context/SKILL.md` | OBLIGATORIO antes de template. Sin contexto, no iniciar. |
 | Añadir/modificar componente | `.claude/skills/component/SKILL.md` | Componente + tests + commit                 |
-| Añadir/modificar template   | `.claude/skills/template/SKILL.md` | Template + ruta + commit                    |
+| Añadir/modificar template   | `.claude/skills/template/SKILL.md` | Template + ruta + commit (requiere invitation-context previo) |
 | Escribir o corregir tests   | `.claude/skills/test/SKILL.md`    | Tests + commit                              |
 | Validar proyecto            | `.claude/skills/validate/SKILL.md` | lint + tests + coverage + build            |
 | Finalizar, mergear          | `.claude/skills/finish/SKILL.md`   | Validar + merge a develop                    |
@@ -86,7 +92,13 @@ Si el usuario pide algo equivalente (p.ej. "añade un Botón", "crea la rama fea
 
 Delegar para tareas focalizadas. No modificar código en code-reviewer, git-ops ni design-verifier.
 
+Cursor tiene los mismos agents en `.cursor/agents/`; delegar con `mcp_task` + `subagent_type`.
+
 ## Critical rules (always enforced)
+
+### Invitation context (OBLIGATORIO)
+- No suponer. Antes de implementar una invitación: ejecutar `invitation-context` y obtener toda la información del usuario.
+- Sin contexto completo, NO iniciar la tarea de template.
 
 ### Git workflow (OBLIGATORIO)
 - Antes de cualquier edit o plan: `git branch --show-current`. Si `main` o `develop`, crear rama feature primero. NUNCA editar en develop.

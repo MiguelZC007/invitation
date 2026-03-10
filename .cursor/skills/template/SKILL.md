@@ -9,6 +9,9 @@ Create or modify an invitation template following project conventions.
 
 ## Steps
 
+### 0. Obtener contexto (OBLIGATORIO)
+Verificar que el skill `invitation-context` se ha ejecutado y el usuario ha proporcionado toda la información requerida (nombre, slug, contenido, fecha, ubicación, etc.). Si no: ejecutar `.cursor/skills/invitation-context/SKILL.md`, formular las preguntas pendientes y **DETENER**. No continuar al paso 1 hasta tener contexto completo. NUNCA suponer valores.
+
 ### 1. Verify branch
 Confirm you are NOT on `main` or `develop`. If you are, tell the user to run `/task` first.
 

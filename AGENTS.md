@@ -11,8 +11,9 @@ El agente debe detectar la intención del usuario y aplicar los sistemas corresp
 | Intención detectada | Acción automática |
 |--------------------|-------------------|
 | Usuario edita `src/app/**`, `*.tsx`, `*.test.*`, etc. | Reglas aplican por glob — leer `.cursor/rules/*.mdc` o `.claude/rules/*.md` según el entorno |
-| Usuario pide crear rama, componente, template, tests, validar o mergear | Aplicar skill correspondiente — leer `SKILL.md` de la carpeta indicada |
-| Usuario pide revisión de código, tests complejos, o operaciones git | Delegar a agent — `mcp_task` (Cursor) con `subagent_type` adecuado |
+| Usuario pide **nueva invitación** o crear/modificar template | PRIMERO `invitation-context` (obtener información). Sin contexto completo, NO iniciar. Luego `template`. |
+| Usuario pide crear rama, componente, tests, validar o mergear | Aplicar skill correspondiente — leer `SKILL.md` de la carpeta indicada |
+| Usuario pide revisión, tests, git, diseño UI/UX o SVG | Delegar a agent — `mcp_task` (Cursor) con `subagent_type` adecuado |
 
 No esperar a que el usuario escriba `/task` o `/component`. Si dice "añade un botón" o "crea la rama feat/button", aplicar el skill directamente.
 
@@ -27,8 +28,9 @@ No esperar a que el usuario escriba `/task` o `/component`. Si dice "añade un b
 
 .cursor/                         ← Cursor IDE
 ├── rules/*.mdc                  ← Activación: Apply Intelligently o Apply to Specific Files
+├── agents/*.md                 ← Delegación: code-reviewer, test-writer, git-ops, ui-designer, svg-designer, design-verifier
 ├── skills/<nombre>/SKILL.md     ← Activación: Agent decide por description, o /skill-name
-└── (agents vía mcp_task)         ← subagent_type: code-reviewer | test-writer | git-ops
+└── (agents vía mcp_task)        ← subagent_type: code-reviewer | test-writer | git-ops | ui-designer | svg-designer | design-verifier
 ```
 
 **Rules**: Se cargan solas cuando archivos coinciden. No invocar manualmente.
@@ -41,7 +43,7 @@ No esperar a que el usuario escriba `/task` o `/component`. Si dice "añade un b
 - Claude: `.claude/skills/<nombre>/SKILL.md`
 
 **Agents**: Delegar cuando la tarea requiera especialista.
-- Cursor: `mcp_task` + `subagent_type` (code-reviewer | test-writer | git-ops)
+- Cursor: `mcp_task` + `subagent_type` (code-reviewer | test-writer | git-ops | ui-designer | svg-designer | design-verifier)
 - Claude: invocar agent desde `.claude/agents/<nombre>.md`
 
 ## Project stack
@@ -124,33 +126,34 @@ src/
 7. **Conventional commits** in English: `feat:`, `fix:`, `refactor:`, `test:`, `docs:`, `chore:`.
 8. **TypeScript strict**: no `any`, no type assertions without justification.
 9. **Accessible by default**: semantic HTML, ARIA, keyboard support.
+10. **Invitation context**: No suponer. Antes de implementar una invitación, ejecutar `invitation-context` y obtener toda la información del usuario. Sin contexto completo, NO iniciar la tarea.
 
 ## Mapeo: intención → skill → agent
 
 | Intención del usuario | Skill a aplicar | Delegar a agent cuando |
 |-----------------------|-----------------|-------------------------|
 | Crear rama, empezar tarea | `task` → `.cursor/skills/task/` | git-ops para operaciones git |
+| **Añadir nueva invitación** | PRIMERO `invitation-context` (obligatorio), luego `template` | test-writer si tests complejos |
 | Añadir/modificar componente | `component` → `.cursor/skills/component/` | test-writer si tests complejos |
-| Añadir/modificar template | `template` → `.cursor/skills/template/` | test-writer si tests complejos |
+| Añadir/modificar template | `template` → `.cursor/skills/template/` (requiere contexto de invitation-context) | test-writer si tests complejos |
 | Escribir o corregir tests | `test` → `.cursor/skills/test/` | test-writer para cobertura amplia |
 | Revisar código, validar calidad | `validate` → `.cursor/skills/validate/` | code-reviewer para review completo |
 | Finalizar, mergear a develop | `finish` → `.cursor/skills/finish/` | git-ops para merge |
-| Implementar/corregir diseño UI/UX | `ui-design` → `.cursor/skills/ui-design/` | ui-designer (Claude) o agente principal con skill |
-| Implementar/modificar SVG, iconos, ilustraciones | `svg-design` → `.cursor/skills/svg-design/` | svg-designer (Claude) o agente principal con skill |
-| Verificar diseño UI/UX | `design-audit` → `.cursor/skills/design-audit/` | design-verifier (Claude) o generalPurpose (Cursor) |
+| Implementar/corregir diseño UI/UX | `ui-design` → `.cursor/skills/ui-design/` | ui-designer |
+| Implementar/modificar SVG, iconos, ilustraciones | `svg-design` → `.cursor/skills/svg-design/` | svg-designer |
+| Verificar diseño UI/UX | `design-audit` → `.cursor/skills/design-audit/` | design-verifier |
 
 ### Cursor: mcp_task
 
-Delegar sin que el usuario lo pida cuando la tarea lo requiera:
+Delegar sin que el usuario lo pida cuando la tarea lo requiera. Agents en `.cursor/agents/`:
 
 - `subagent_type: "code-reviewer"` — review, lint, tests (Read, Bash)
 - `subagent_type: "test-writer"` — crear/corregir tests (Read, Write, Edit, Bash)
 - `subagent_type: "git-ops"` — branch, commit, merge (Read, Bash)
-- `subagent_type: "generalPurpose"` — design-audit: verificar diseño UI/UX (Read, Grep, Glob). Prompt: aplicar design-audit SKILL, no modificar código.
+- `subagent_type: "ui-designer"` — implementar diseño siguiendo ui-design skill (Read, Write, Edit)
+- `subagent_type: "svg-designer"` — implementar SVG siguiendo svg-design skill (Read, Write, Edit)
+- `subagent_type: "design-verifier"` — auditar diseño UI/UX solo, sin modificar código (Read, Grep, Glob)
 
 ### Claude
 
-Agents definidos en `.claude/agents/`. Delegar con el mecanismo nativo de Claude.
-- ui-designer: implementar diseño siguiendo ui-design skill
-- svg-designer: implementar SVG siguiendo svg-design skill
-- design-verifier: auditar diseño UI/UX solo (no modifica código)
+Agents definidos en `.claude/agents/`. Delegar con el mecanismo nativo de Claude. Cursor tiene paridad en `.cursor/agents/` con `mcp_task` + `subagent_type`.
