@@ -50,6 +50,7 @@ Always start from `develop`. Never commit to `main` or `develop` directly.
 | imports    | `.claude/rules/imports.md`  | global             |
 | typescript | `.claude/rules/typescript.md`| `*.ts`, `*.tsx`    |
 | i18n       | `.claude/rules/i18n.md`     | `*.ts`, `*.tsx`, `*.json` |
+| responsive-design | `.claude/rules/responsive-design.md` | `*.tsx`, `*.css` |
 | git-workflow | `.claude/rules/git-workflow.md` | global     |
 
 Cargar automáticamente al editar archivos que coincidan. No invocar.
@@ -78,6 +79,9 @@ Si el usuario pide algo equivalente (p.ej. "añade un Botón", "crea la rama fea
 Delegar para tareas focalizadas. No modificar código en code-reviewer/git-ops.
 
 ## Critical rules (always enforced)
+
+### Git workflow (OBLIGATORIO)
+- Antes de cualquier edit o plan: `git branch --show-current`. Si `main` o `develop`, crear rama feature primero. NUNCA editar en develop.
 
 ### Imports
 - **No barrel exports**: never create `index.ts` re-export files.

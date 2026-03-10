@@ -25,6 +25,7 @@ Follow these rules strictly:
 - Named export: `export function ComponentName({ ... }: Props)`.
 - Props as `type Props = { ... }`.
 - Tailwind utility classes for styling — static class names only.
+- Responsive: mobile-first with `sm:`, `md:`, `lg:` per design; see `responsive-design` rule.
 - Import animation presets from `@/theme/animationPresets` if animating.
 - Import tokens from `@/theme/tokens` if using theme values.
 - Direct imports only — no barrel exports.

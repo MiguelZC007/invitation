@@ -25,18 +25,18 @@ Aplicar sin esperar `/command`:
 ## Workflow
 
 ```
-/task feat/my-feature     →  crea rama desde develop
+PRIMERO: git branch --show-current → si main/develop → crear rama feat/... desde develop
   ↓
-/component atom Button    →  componente + tests + commit
-/template GalaInvitation   →  template + ruta + commit
-/test Button              →  escribe/ejecuta tests + commit
+/task feat/my-feature     →  crea rama desde develop (si no existe)
+  ↓
+/component, /template, /test, planes  →  TODO en rama feature
   ↓
 /validate                 →  lint + tests + coverage + build
   ↓
 /finish                   →  valida todo → merge a develop
 ```
 
-Siempre partir de `develop`. Nunca commit directo en `main` o `develop`.
+**OBLIGATORIO:** Antes de ejecutar planes, skills o cualquier edit: verificar rama. Si está en `main` o `develop`, crear rama feature y hacer checkout. NUNCA editar en develop.
 
 ## Skills (aplicar por intención)
 

@@ -14,3 +14,8 @@ globs: ["src/app/**/*.{ts,tsx}"]
 - Directiva `"use client"` solo cuando se usan hooks, event handlers o APIs del navegador.
 - Metadata se exporta desde layouts/pages server-side (no en client components).
 - Imports de fuentes con `next/font/google`, aplicar via CSS variables en el body.
+
+## Server vs Client
+- Server Components por defecto; `"use client"` solo para: hooks (`useState`, `useEffect`), event handlers, `useRouter`, `usePathname`, `useSearchParams`, APIs del navegador.
+- Data fetching en Server Components: `fetch()` con `cache: 'force-cache'` (estático), `cache: 'no-store'` (dinámico), `next: { revalidate: N }` para revalidación.
+- Imports de routing: `useRouter`, `usePathname`, `useSearchParams` desde `next/navigation` (no `next/router`).

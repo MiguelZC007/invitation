@@ -34,6 +34,7 @@ No esperar a que el usuario escriba `/task` o `/component`. Si dice "añade un b
 **Rules**: Se cargan solas cuando archivos coinciden. No invocar manualmente.
 - Cursor: `.cursor/rules/*.mdc`
 - Claude: `.claude/rules/*.md`
+- `responsive-design` → globs: `*.tsx`, `*.css`
 
 **Skills**: Leer el SKILL.md cuando la petición del usuario encaje con la `description`.
 - Cursor: `.cursor/skills/<nombre>/SKILL.md`
@@ -114,13 +115,14 @@ src/
 
 ## Non-negotiable rules
 
-1. **No barrel exports**: never `index.ts`. Import `@/components/atoms/Button`, not `@/components/atoms`.
-2. **Only pnpm**: no npm, no yarn.
-3. **ALL tests must pass** before commit or merge.
-4. **Never commit to main or develop** directly.
-5. **Conventional commits** in English: `feat:`, `fix:`, `refactor:`, `test:`, `docs:`, `chore:`.
-6. **TypeScript strict**: no `any`, no type assertions without justification.
-7. **Accessible by default**: semantic HTML, ARIA, keyboard support.
+1. **Branch before edit**: Antes de CUALQUIER edit o plan, verificar `git branch --show-current`. Si `main` o `develop`, crear rama feature primero. NUNCA editar en develop.
+2. **No barrel exports**: never `index.ts`. Import `@/components/atoms/Button`, not `@/components/atoms`.
+3. **Only pnpm**: no npm, no yarn.
+4. **ALL tests must pass** before commit or merge.
+5. **Never commit to main or develop** directly.
+6. **Conventional commits** in English: `feat:`, `fix:`, `refactor:`, `test:`, `docs:`, `chore:`.
+7. **TypeScript strict**: no `any`, no type assertions without justification.
+8. **Accessible by default**: semantic HTML, ARIA, keyboard support.
 
 ## Mapeo: intención → skill → agent
 

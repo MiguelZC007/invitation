@@ -25,7 +25,7 @@ Rules:
 - Props `type` with all customizable content (title, subtitle, message, date, etc.).
 - Compose from existing organisms: `InvitationHeader`, `InvitationBody`, `ScreenTransition`.
 - Motion animations using presets from `@/theme/animationPresets`.
-- Responsive Tailwind layout.
+- Responsive Tailwind layout: mobile-first, standard breakpoints; i18n with namespaces and ICU for dates/numbers.
 - Semantic HTML structure with proper landmarks.
 
 ### 4. Create/update tests

@@ -7,6 +7,10 @@ alwaysApply: true
 
 Use `mcp_task` with `subagent_type` to delegate focused subtasks to specialized agents.
 
+## OBLIGATORIO antes de cualquier tarea (incl. planes)
+
+Si el agente va a ejecutar un **plan** o cualquier tarea de edición: verificar rama con `git branch --show-current`. Si está en `main` o `develop`, crear rama feature primero (ver regla `git-workflow`). NUNCA editar en develop.
+
 ## When to delegate
 
 | Scenario | subagent_type | Use when |
