@@ -21,7 +21,7 @@ No esperar a que el usuario escriba `/task` o `/component`. Si dice "añade un b
 ```
 .claude/                         ← Claude Code
 ├── rules/*.md                   ← Activación: archivos abiertos coinciden con globs
-├── agents/*.md                  ← Delegación explícita (code-reviewer, test-writer, git-ops, ui-designer, design-verifier)
+├── agents/*.md                  ← Delegación explícita (code-reviewer, test-writer, git-ops, ui-designer, svg-designer, design-verifier)
 ├── skills/<nombre>/SKILL.md     ← Activación: intención del usuario coincide con description
 └── settings.json                ← Hooks automáticos
 
@@ -136,6 +136,7 @@ src/
 | Revisar código, validar calidad | `validate` → `.cursor/skills/validate/` | code-reviewer para review completo |
 | Finalizar, mergear a develop | `finish` → `.cursor/skills/finish/` | git-ops para merge |
 | Implementar/corregir diseño UI/UX | `ui-design` → `.cursor/skills/ui-design/` | ui-designer (Claude) o agente principal con skill |
+| Implementar/modificar SVG, iconos, ilustraciones | `svg-design` → `.cursor/skills/svg-design/` | svg-designer (Claude) o agente principal con skill |
 | Verificar diseño UI/UX | `design-audit` → `.cursor/skills/design-audit/` | design-verifier (Claude) o generalPurpose (Cursor) |
 
 ### Cursor: mcp_task
@@ -151,4 +152,5 @@ Delegar sin que el usuario lo pida cuando la tarea lo requiera:
 
 Agents definidos en `.claude/agents/`. Delegar con el mecanismo nativo de Claude.
 - ui-designer: implementar diseño siguiendo ui-design skill
+- svg-designer: implementar SVG siguiendo svg-design skill
 - design-verifier: auditar diseño UI/UX solo (no modifica código)
