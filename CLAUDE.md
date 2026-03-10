@@ -1,15 +1,27 @@
 # Invitation Project — Orchestration Guide
 
-This document is the central orchestrator. It tells Claude where everything is and how to use each system.
+Orquestador para Claude Code. Indica dónde están rules, skills y agents y cómo usarlos automáticamente.
 
-## Quick reference
+Referencia unificada: [AGENTS.md](AGENTS.md). Cursor: [CURSOR.md](CURSOR.md).
 
-| System    | Location                  | Purpose                          |
-|-----------|---------------------------|----------------------------------|
-| Rules     | `.claude/rules/*.md`      | Best practices auto-loaded by file context |
-| Skills    | `.claude/skills/*/SKILL.md` | User-invocable workflows (`/task`, `/component`, etc.) |
-| Agents    | `.claude/agents/*.md`     | Specialized AI assistants for delegation |
-| Hooks     | `.claude/settings.json`   | Deterministic enforcement (pre/post tool) |
+## Uso automático
+
+Aplicar los sistemas sin esperar invocación explícita (`/task`, etc.):
+
+1. **Rules**: Se cargan solas al editar archivos que coinciden con los globs. No invocar manualmente.
+
+2. **Skills**: Cuando la intención del usuario encaje con el workflow (crear componente, rama, template, tests, validar, mergear), leer y seguir el `SKILL.md` correspondiente en `.claude/skills/<nombre>/`.
+
+3. **Agents**: Cuando la tarea requiera un especialista (revisión, tests complejos, git), delegar al agent indicado en `.claude/agents/`.
+
+## Ubicaciones
+
+| System    | Location                  | Activación automática                    |
+|-----------|---------------------------|------------------------------------------|
+| Rules     | `.claude/rules/*.md`      | Por globs según archivos en contexto     |
+| Skills    | `.claude/skills/<nombre>/SKILL.md` | Por intención del usuario = description |
+| Agents    | `.claude/agents/<nombre>.md`       | Por delegación cuando la tarea lo pida   |
+| Hooks     | `.claude/settings.json`   | PreToolUse, Stop (automáticos)            |
 
 ## Workflow
 
@@ -27,43 +39,43 @@ This document is the central orchestrator. It tells Claude where everything is a
 
 Always start from `develop`. Never commit to `main` or `develop` directly.
 
-## Rules (auto-loaded by file context)
+## Rules (auto-loaded)
 
-| Rule       | Scope                  | Enforces                                  |
-|------------|------------------------|--------------------------------------------|
-| nextjs     | `src/app/**`           | Next.js 16: async params, static export    |
-| react      | `*.tsx`                | React 19: no legacy APIs, named exports    |
-| testing    | `*.test.*`             | Vitest + RTL: accessible queries, coverage |
-| styling    | `*.tsx`, `*.css`       | Tailwind v4 static classes, Motion presets |
-| imports    | global                 | No barrel exports, direct `@/*` paths      |
-| typescript | `*.ts`, `*.tsx`        | Strict: no `any`, type over interface      |
-| i18n       | `*.ts`, `*.tsx`, `*.json` | next-intl: locales sync, setRequestLocale |
-| git-workflow | global               | Branching, conventional commits, validations |
+| Rule       | Archivo                 | Scope              |
+|------------|-------------------------|--------------------|
+| nextjs     | `.claude/rules/nextjs.md`    | `src/app/**`       |
+| react      | `.claude/rules/react.md`     | `*.tsx`            |
+| testing    | `.claude/rules/testing.md`  | `*.test.*`         |
+| styling    | `.claude/rules/styling.md`  | `*.tsx`, `*.css`   |
+| imports    | `.claude/rules/imports.md`  | global             |
+| typescript | `.claude/rules/typescript.md`| `*.ts`, `*.tsx`    |
+| i18n       | `.claude/rules/i18n.md`     | `*.ts`, `*.tsx`, `*.json` |
+| git-workflow | `.claude/rules/git-workflow.md` | global     |
 
-Rules load automatically when editing matching files. No manual invocation needed.
+Cargar automáticamente al editar archivos que coincidan. No invocar.
 
-## Skills (user-invocable slash commands)
+## Skills (aplicar por intención)
 
-| Command                            | What it does                              |
-|-------------------------------------|-------------------------------------------|
-| `/task <branch-name>`              | Create feature branch from develop        |
-| `/component <level> <Name> [desc]` | Create/modify component + tests + commit  |
-| `/template <Name> [desc]`         | Create/modify template + route + commit   |
-| `/test <Name>`                     | Write/run tests for a component           |
-| `/validate`                        | Run lint + tests + coverage + build       |
-| `/finish`                          | Validate all + merge branch to develop    |
+| Intención                    | Skill path                     | Acción                                      |
+|-----------------------------|---------------------------------|---------------------------------------------|
+| Crear rama, empezar tarea   | `.claude/skills/task/SKILL.md`   | Branch desde develop                        |
+| Añadir/modificar componente | `.claude/skills/component/SKILL.md` | Componente + tests + commit                 |
+| Añadir/modificar template   | `.claude/skills/template/SKILL.md` | Template + ruta + commit                    |
+| Escribir o corregir tests   | `.claude/skills/test/SKILL.md`    | Tests + commit                              |
+| Validar proyecto            | `.claude/skills/validate/SKILL.md` | lint + tests + coverage + build            |
+| Finalizar, mergear          | `.claude/skills/finish/SKILL.md`   | Validar + merge a develop                    |
 
-Each skill handles the full cycle: implement → test → lint → commit.
+Si el usuario pide algo equivalente (p.ej. "añade un Botón", "crea la rama feat/button"), leer el SKILL.md y ejecutarlo. No esperar a `/command`.
 
-## Agents (specialized delegation)
+## Agents (delegar cuando convenga)
 
-| Agent          | Use when                                    | Can do         |
-|----------------|---------------------------------------------|----------------|
-| code-reviewer  | Need to review code quality and practices   | Read, Bash     |
-| test-writer    | Need to create or fix tests                 | Read, Write, Edit, Bash |
-| git-ops        | Need branching, committing, or merging      | Read, Bash     |
+| Agent          | Archivo                    | Delegar cuando                          |
+|----------------|----------------------------|-----------------------------------------|
+| code-reviewer  | `.claude/agents/code-reviewer.md` | Review, validar calidad, lint/tests |
+| test-writer    | `.claude/agents/test-writer.md`    | Tests complejos, cobertura, fixes  |
+| git-ops        | `.claude/agents/git-ops.md`        | Branch, commit, merge                 |
 
-Agents run in isolated context. Delegate to them for focused subtasks.
+Delegar para tareas focalizadas. No modificar código en code-reviewer/git-ops.
 
 ## Critical rules (always enforced)
 

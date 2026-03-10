@@ -1,0 +1,29 @@
+---
+description: When to delegate to code-reviewer, test-writer, or git-ops subagents via mcp_task
+alwaysApply: true
+---
+
+# Agent Delegation (Cursor)
+
+Use `mcp_task` with `subagent_type` to delegate focused subtasks to specialized agents.
+
+## When to delegate
+
+| Scenario | subagent_type | Use when |
+|----------|---------------|----------|
+| Code review | `code-reviewer` | User asks for code review, quality check, or validation before commit |
+| Write/fix tests | `test-writer` | User needs comprehensive tests, coverage improvement, or failing test fixes |
+| Git operations | `git-ops` | User needs branching, conventional commits, or merge to develop |
+
+## Usage
+
+- **code-reviewer**: Read-only review. Does not modify code. Runs lint + tests and reports issues.
+- **test-writer**: Creates or fixes tests. Uses Vitest + RTL patterns. Can read, write, edit, run bash.
+- **git-ops**: Manages git only. Never modifies source. Handles branch creation, commits, merges.
+
+## Skills that may delegate
+
+- `/component` and `/template`: delegate test creation to test-writer when tests are complex
+- `/test`: delegate to test-writer for comprehensive test coverage
+- `/validate`: can delegate to code-reviewer for full review + validation
+- `/task` and `/finish`: git-ops handles branching and merges; main agent can also execute directly per skill steps

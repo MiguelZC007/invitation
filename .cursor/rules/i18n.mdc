@@ -1,0 +1,29 @@
+---
+description: next-intl 4.x - locales es/en, setRequestLocale, messages sync
+globs: "src/**/*.{ts,tsx}, src/messages/*.json"
+alwaysApply: false
+---
+
+# i18n Rules (next-intl 4.x)
+
+## Configuración
+- Locales: `es` (default), `en`.
+- Prefix: `always` — todas las rutas tienen locale (`/es/...`, `/en/...`).
+- Configuración en `src/i18n/routing.ts` (defineRouting) y `src/i18n/request.ts` (getRequestConfig).
+
+## Uso en componentes
+- Client components: `useTranslations("namespace")` — retorna función `t("key")`.
+- Server components: importar `getTranslations` de `next-intl/server`.
+- Namespaces corresponden a keys de primer nivel en los JSON de mensajes.
+
+## Archivos de mensajes
+- `src/messages/es.json` y `src/messages/en.json`.
+- Mantener ambos archivos sincronizados (mismas keys).
+- Estructura plana o un nivel de anidación máximo.
+- Keys en inglés (camelCase): `"welcomeMessage"`, no `"mensaje_bienvenida"`.
+
+## Rutas
+- Todas las páginas bajo `src/app/[locale]/`.
+- Validar locale con `hasLocale(routing.locales, locale)` en layouts.
+- `setRequestLocale(locale)` obligatorio para static rendering.
+- `generateStaticParams()` genera rutas para todos los locales.

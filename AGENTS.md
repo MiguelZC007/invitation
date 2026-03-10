@@ -1,33 +1,47 @@
 # Agents Guide — Invitation Project
 
-This document serves as the orchestration reference for AI agents (Claude Code, Cursor, and others).
+Orquestador central (Claude, Cursor, etc.). Indica dónde están rules, skills y agents, y cómo usarlos automáticamente según el contexto.
 
-## Architecture overview
+Referencias por entorno: [CLAUDE.md](CLAUDE.md) (Claude Code), [CURSOR.md](CURSOR.md) (Cursor IDE).
+
+## Uso automático (sin invocación explícita)
+
+El agente debe detectar la intención del usuario y aplicar los sistemas correspondientes:
+
+| Intención detectada | Acción automática |
+|--------------------|-------------------|
+| Usuario edita `src/app/**`, `*.tsx`, `*.test.*`, etc. | Reglas aplican por glob — leer `.cursor/rules/*.mdc` o `.claude/rules/*.md` según el entorno |
+| Usuario pide crear rama, componente, template, tests, validar o mergear | Aplicar skill correspondiente — leer `SKILL.md` de la carpeta indicada |
+| Usuario pide revisión de código, tests complejos, o operaciones git | Delegar a agent — `mcp_task` (Cursor) con `subagent_type` adecuado |
+
+No esperar a que el usuario escriba `/task` o `/component`. Si dice "añade un botón" o "crea la rama feat/button", aplicar el skill directamente.
+
+## Ubicaciones y activación
 
 ```
-.claude/
-├── rules/          ← Best practices, auto-loaded by file context
-│   ├── nextjs.md        (src/app/**)
-│   ├── react.md         (*.tsx)
-│   ├── testing.md       (*.test.*)
-│   ├── styling.md       (*.tsx, *.css)
-│   ├── imports.md       (global)
-│   ├── typescript.md    (*.ts, *.tsx)
-│   ├── i18n.md          (*.ts, *.tsx, *.json)
-│   └── git-workflow.md  (global)
-├── agents/         ← Specialized AI assistants
-│   ├── code-reviewer.md  (read-only review, lint, tests)
-│   ├── test-writer.md     (create/fix tests, coverage)
-│   └── git-ops.md         (branching, commits, merges)
-├── skills/         ← User-invocable workflows
-│   ├── task/        → /task: create branch from develop
-│   ├── component/   → /component: create component + tests
-│   ├── template/    → /template: create template + route
-│   ├── test/        → /test: write/run tests
-│   ├── validate/    → /validate: lint + tests + coverage + build
-│   └── finish/      → /finish: validate + merge to develop
-└── settings.json   ← Hooks and shared settings
+.claude/                         ← Claude Code
+├── rules/*.md                   ← Activación: archivos abiertos coinciden con globs
+├── agents/*.md                  ← Delegación explícita (code-reviewer, test-writer, git-ops)
+├── skills/<nombre>/SKILL.md     ← Activación: intención del usuario coincide con description
+└── settings.json                ← Hooks automáticos
+
+.cursor/                         ← Cursor IDE
+├── rules/*.mdc                  ← Activación: Apply Intelligently o Apply to Specific Files
+├── skills/<nombre>/SKILL.md     ← Activación: Agent decide por description, o /skill-name
+└── (agents vía mcp_task)         ← subagent_type: code-reviewer | test-writer | git-ops
 ```
+
+**Rules**: Se cargan solas cuando archivos coinciden. No invocar manualmente.
+- Cursor: `.cursor/rules/*.mdc`
+- Claude: `.claude/rules/*.md`
+
+**Skills**: Leer el SKILL.md cuando la petición del usuario encaje con la `description`.
+- Cursor: `.cursor/skills/<nombre>/SKILL.md`
+- Claude: `.claude/skills/<nombre>/SKILL.md`
+
+**Agents**: Delegar cuando la tarea requiera especialista.
+- Cursor: `mcp_task` + `subagent_type` (code-reviewer | test-writer | git-ops)
+- Claude: invocar agent desde `.claude/agents/<nombre>.md`
 
 ## Project stack
 
@@ -108,13 +122,25 @@ src/
 6. **TypeScript strict**: no `any`, no type assertions without justification.
 7. **Accessible by default**: semantic HTML, ARIA, keyboard support.
 
-## Agent delegation guide
+## Mapeo: intención → skill → agent
 
-| Task                        | Delegate to     | Skill to use  |
-|-----------------------------|-----------------|---------------|
-| Create new component        | (self + test-writer) | `/component` |
-| Create new template         | (self + test-writer) | `/template`  |
-| Write or fix tests          | test-writer     | `/test`       |
-| Review code quality         | code-reviewer   | (manual)      |
-| Branch/commit/merge         | git-ops         | `/task`, `/finish` |
-| Full project validation     | code-reviewer   | `/validate`   |
+| Intención del usuario | Skill a aplicar | Delegar a agent cuando |
+|-----------------------|-----------------|-------------------------|
+| Crear rama, empezar tarea | `task` → `.cursor/skills/task/` | git-ops para operaciones git |
+| Añadir/modificar componente | `component` → `.cursor/skills/component/` | test-writer si tests complejos |
+| Añadir/modificar template | `template` → `.cursor/skills/template/` | test-writer si tests complejos |
+| Escribir o corregir tests | `test` → `.cursor/skills/test/` | test-writer para cobertura amplia |
+| Revisar código, validar calidad | `validate` → `.cursor/skills/validate/` | code-reviewer para review completo |
+| Finalizar, mergear a develop | `finish` → `.cursor/skills/finish/` | git-ops para merge |
+
+### Cursor: mcp_task
+
+Delegar sin que el usuario lo pida cuando la tarea lo requiera:
+
+- `subagent_type: "code-reviewer"` — review, lint, tests (Read, Bash)
+- `subagent_type: "test-writer"` — crear/corregir tests (Read, Write, Edit, Bash)
+- `subagent_type: "git-ops"` — branch, commit, merge (Read, Bash)
+
+### Claude
+
+Agents definidos en `.claude/agents/`. Delegar con el mecanismo nativo de Claude.
