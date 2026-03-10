@@ -1,6 +1,23 @@
 {
   "common": {
     "title": "Invitación",
-    "welcome": "Bienvenido"
+    "welcome": "Bienvenido",
+    "next": "Siguiente",
+    "prev": "Anterior",
+    "rsvp": "Confirmar asistencia"
+  },
+  "invitation": {
+    "title": "Te invitamos",
+    "subtitle": "a celebrar con nosotros",
+    "message": "Nos encantaría contar con tu presencia en este día tan especial para nosotros.",
+    "date": "15 de junio, 2026",
+    "time": "18:00 h",
+    "locationName": "Salón de eventos",
+    "locationAddress": "Calle Ejemplo 123, Ciudad"
+  },
+  "screens": {
+    "welcome": "¡Estás invitado!",
+    "details": "Detalles del evento",
+    "confirm": "¿Nos acompañas?"
   }
 }

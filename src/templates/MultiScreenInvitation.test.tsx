@@ -1,0 +1,68 @@
+import { render, screen, waitFor } from "@testing-library/react";
+import { describe, it, expect } from "vitest";
+import userEvent from "@testing-library/user-event";
+import { MultiScreenInvitation } from "./MultiScreenInvitation";
+
+const screens = [
+  { key: "s1", content: <p>Screen One</p> },
+  { key: "s2", content: <p>Screen Two</p> },
+  { key: "s3", content: <p>Screen Three</p> },
+];
+
+describe("MultiScreenInvitation", () => {
+  it("renders first screen", () => {
+    render(<MultiScreenInvitation screens={screens} />);
+    expect(screen.getByText("Screen One")).toBeInTheDocument();
+  });
+
+  it("does not show prev button on first screen", () => {
+    render(<MultiScreenInvitation screens={screens} prevLabel="Back" />);
+    expect(
+      screen.queryByRole("button", { name: "Back" }),
+    ).not.toBeInTheDocument();
+  });
+
+  it("navigates to next screen", async () => {
+    const user = userEvent.setup();
+    render(<MultiScreenInvitation screens={screens} />);
+
+    const nextButtons = screen.getAllByRole("button", { name: "Siguiente" });
+    await user.click(nextButtons[0]);
+
+    await waitFor(() => {
+      expect(
+        screen.getAllByText("Screen Two").length,
+      ).toBeGreaterThanOrEqual(1);
+    });
+  });
+
+  it("navigates back to previous screen", async () => {
+    const user = userEvent.setup();
+    render(<MultiScreenInvitation screens={screens} />);
+
+    const nextButtons = screen.getAllByRole("button", { name: "Siguiente" });
+    await user.click(nextButtons[0]);
+
+    await waitFor(() => {
+      expect(
+        screen.getAllByText("Screen Two").length,
+      ).toBeGreaterThanOrEqual(1);
+    });
+
+    const prevButtons = screen.getAllByRole("button", { name: "Anterior" });
+    await user.click(prevButtons[0]);
+
+    await waitFor(() => {
+      expect(
+        screen.getAllByText("Screen One").length,
+      ).toBeGreaterThanOrEqual(1);
+    });
+  });
+
+  it("has navigation landmark", () => {
+    render(<MultiScreenInvitation screens={screens} />);
+    expect(screen.getByRole("navigation")).toHaveAccessibleName(
+      "Navegación de pantallas",
+    );
+  });
+});

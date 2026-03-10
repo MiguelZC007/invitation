@@ -1,6 +1,23 @@
 {
   "common": {
     "title": "Invitation",
-    "welcome": "Welcome"
+    "welcome": "Welcome",
+    "next": "Next",
+    "prev": "Previous",
+    "rsvp": "RSVP"
+  },
+  "invitation": {
+    "title": "You are invited",
+    "subtitle": "to celebrate with us",
+    "message": "We would love to have you join us on this very special day.",
+    "date": "June 15, 2026",
+    "time": "6:00 PM",
+    "locationName": "Event Hall",
+    "locationAddress": "123 Example St, City"
+  },
+  "screens": {
+    "welcome": "You're invited!",
+    "details": "Event details",
+    "confirm": "Will you join us?"
   }
 }
