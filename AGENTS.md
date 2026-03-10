@@ -21,7 +21,7 @@ No esperar a que el usuario escriba `/task` o `/component`. Si dice "añade un b
 ```
 .claude/                         ← Claude Code
 ├── rules/*.md                   ← Activación: archivos abiertos coinciden con globs
-├── agents/*.md                  ← Delegación explícita (code-reviewer, test-writer, git-ops)
+├── agents/*.md                  ← Delegación explícita (code-reviewer, test-writer, git-ops, ui-designer, design-verifier)
 ├── skills/<nombre>/SKILL.md     ← Activación: intención del usuario coincide con description
 └── settings.json                ← Hooks automáticos
 
@@ -116,13 +116,14 @@ src/
 ## Non-negotiable rules
 
 1. **Branch before edit**: Antes de CUALQUIER edit o plan, verificar `git branch --show-current`. Si `main` o `develop`, crear rama feature primero. NUNCA editar en develop.
-2. **No barrel exports**: never `index.ts`. Import `@/components/atoms/Button`, not `@/components/atoms`.
-3. **Only pnpm**: no npm, no yarn.
-4. **ALL tests must pass** before commit or merge.
-5. **Never commit to main or develop** directly.
-6. **Conventional commits** in English: `feat:`, `fix:`, `refactor:`, `test:`, `docs:`, `chore:`.
-7. **TypeScript strict**: no `any`, no type assertions without justification.
-8. **Accessible by default**: semantic HTML, ARIA, keyboard support.
+2. **Persist changes on completion**: Al completar un plan o tarea, SIEMPRE hacer commit de los cambios. NUNCA terminar con cambios sin commitear. NUNCA hacer `git checkout develop` sin merge previo; permanecer en la rama feature.
+3. **No barrel exports**: never `index.ts`. Import `@/components/atoms/Button`, not `@/components/atoms`.
+4. **Only pnpm**: no npm, no yarn.
+5. **ALL tests must pass** before commit or merge.
+6. **Never commit to main or develop** directly.
+7. **Conventional commits** in English: `feat:`, `fix:`, `refactor:`, `test:`, `docs:`, `chore:`.
+8. **TypeScript strict**: no `any`, no type assertions without justification.
+9. **Accessible by default**: semantic HTML, ARIA, keyboard support.
 
 ## Mapeo: intención → skill → agent
 
@@ -134,6 +135,8 @@ src/
 | Escribir o corregir tests | `test` → `.cursor/skills/test/` | test-writer para cobertura amplia |
 | Revisar código, validar calidad | `validate` → `.cursor/skills/validate/` | code-reviewer para review completo |
 | Finalizar, mergear a develop | `finish` → `.cursor/skills/finish/` | git-ops para merge |
+| Implementar/corregir diseño UI/UX | `ui-design` → `.cursor/skills/ui-design/` | ui-designer (Claude) o agente principal con skill |
+| Verificar diseño UI/UX | `design-audit` → `.cursor/skills/design-audit/` | design-verifier (Claude) o generalPurpose (Cursor) |
 
 ### Cursor: mcp_task
 
@@ -142,7 +145,10 @@ Delegar sin que el usuario lo pida cuando la tarea lo requiera:
 - `subagent_type: "code-reviewer"` — review, lint, tests (Read, Bash)
 - `subagent_type: "test-writer"` — crear/corregir tests (Read, Write, Edit, Bash)
 - `subagent_type: "git-ops"` — branch, commit, merge (Read, Bash)
+- `subagent_type: "generalPurpose"` — design-audit: verificar diseño UI/UX (Read, Grep, Glob). Prompt: aplicar design-audit SKILL, no modificar código.
 
 ### Claude
 
 Agents definidos en `.claude/agents/`. Delegar con el mecanismo nativo de Claude.
+- ui-designer: implementar diseño siguiendo ui-design skill
+- design-verifier: auditar diseño UI/UX solo (no modifica código)

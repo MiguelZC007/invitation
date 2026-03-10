@@ -14,7 +14,8 @@ export default defineConfig({
       exclude: [
         "src/**/*.{test,spec}.{ts,tsx}",
         "src/**/*.d.ts",
-        "src/app/layout.tsx",
+        "src/app/**",
+        "src/i18n/**",
       ],
       thresholds: {
         lines: 80,

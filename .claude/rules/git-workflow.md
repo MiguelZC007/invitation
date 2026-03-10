@@ -32,3 +32,12 @@
 
 ## Merge
 - Merge con `--no-ff`. No push automático. No eliminar rama feature tras merge (lo decide el usuario).
+
+## Persistir cambios (OBLIGATORIO para agentes)
+
+**Al completar un plan o tarea:**
+
+1. **SIEMPRE hacer commit** de los cambios realizados. NUNCA terminar una sesión con cambios sin commitear.
+2. **NUNCA hacer `git checkout develop`** sin antes haber mergeado la rama feature (via `/finish` o git-ops). Cambiar a develop descarta el contexto de la rama y puede hacer que el usuario pierda cambios.
+3. **Al finalizar un plan:** verificar `git status`, hacer `git add` de los archivos modificados y `git commit` con mensaje conventional. Permanecer en la rama feature.
+4. Si el usuario quiere integrar en develop, usar el skill `/finish` (validar + merge). No hacer checkout develop sin merge previo.

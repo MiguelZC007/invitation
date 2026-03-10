@@ -65,4 +65,19 @@ describe("MultiScreenInvitation", () => {
       "Navegación de pantallas",
     );
   });
+
+  it("accepts transitionVariant prop", () => {
+    render(
+      <MultiScreenInvitation screens={screens} transitionVariant="cloud" />,
+    );
+    expect(screen.getByText("Screen One")).toBeInTheDocument();
+  });
+
+  it("accepts buttonVariant prop", () => {
+    render(
+      <MultiScreenInvitation screens={screens} buttonVariant="accent" />,
+    );
+    const nextBtn = screen.getByRole("button", { name: "Siguiente" });
+    expect(nextBtn).toHaveClass("bg-amber-600");
+  });
 });

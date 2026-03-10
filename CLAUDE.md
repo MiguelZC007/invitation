@@ -51,6 +51,7 @@ Always start from `develop`. Never commit to `main` or `develop` directly.
 | typescript | `.claude/rules/typescript.md`| `*.ts`, `*.tsx`    |
 | i18n       | `.claude/rules/i18n.md`     | `*.ts`, `*.tsx`, `*.json` |
 | responsive-design | `.claude/rules/responsive-design.md` | `*.tsx`, `*.css` |
+| ui-design | `.claude/rules/ui-design.md` | `*.tsx`, `*.css`, `src/theme/**` |
 | git-workflow | `.claude/rules/git-workflow.md` | global     |
 
 Cargar automáticamente al editar archivos que coincidan. No invocar.
@@ -65,18 +66,22 @@ Cargar automáticamente al editar archivos que coincidan. No invocar.
 | Escribir o corregir tests   | `.claude/skills/test/SKILL.md`    | Tests + commit                              |
 | Validar proyecto            | `.claude/skills/validate/SKILL.md` | lint + tests + coverage + build            |
 | Finalizar, mergear          | `.claude/skills/finish/SKILL.md`   | Validar + merge a develop                    |
+| Implementar/corregir diseño UI/UX | `.claude/skills/ui-design/SKILL.md` | Aplicar buenas prácticas de diseño     |
+| Verificar diseño UI/UX      | `.claude/skills/design-audit/SKILL.md` | Auditar paleta, contraste, responsive  |
 
 Si el usuario pide algo equivalente (p.ej. "añade un Botón", "crea la rama feat/button"), leer el SKILL.md y ejecutarlo. No esperar a `/command`.
 
 ## Agents (delegar cuando convenga)
 
-| Agent          | Archivo                    | Delegar cuando                          |
-|----------------|----------------------------|-----------------------------------------|
-| code-reviewer  | `.claude/agents/code-reviewer.md` | Review, validar calidad, lint/tests |
-| test-writer    | `.claude/agents/test-writer.md`    | Tests complejos, cobertura, fixes  |
-| git-ops        | `.claude/agents/git-ops.md`        | Branch, commit, merge                 |
+| Agent           | Archivo                      | Delegar cuando                               |
+|-----------------|------------------------------|----------------------------------------------|
+| code-reviewer   | `.claude/agents/code-reviewer.md`   | Review, validar calidad, lint/tests    |
+| test-writer     | `.claude/agents/test-writer.md`      | Tests complejos, cobertura, fixes       |
+| git-ops         | `.claude/agents/git-ops.md`          | Branch, commit, merge                    |
+| ui-designer     | `.claude/agents/ui-designer.md`      | Implementar/corregir diseño UI/UX       |
+| design-verifier | `.claude/agents/design-verifier.md`  | Verificar solo diseño UI/UX (no modifica) |
 
-Delegar para tareas focalizadas. No modificar código en code-reviewer/git-ops.
+Delegar para tareas focalizadas. No modificar código en code-reviewer, git-ops ni design-verifier.
 
 ## Critical rules (always enforced)
 

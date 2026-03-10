@@ -11,6 +11,12 @@ Use `mcp_task` with `subagent_type` to delegate focused subtasks to specialized 
 
 Si el agente va a ejecutar un **plan** o cualquier tarea de edición: verificar rama con `git branch --show-current`. Si está en `main` o `develop`, crear rama feature primero (ver regla `git-workflow`). NUNCA editar en develop.
 
+## OBLIGATORIO al finalizar un plan o tarea
+
+1. **Commitear los cambios.** NUNCA terminar con cambios sin commitear. Ejecutar `git status`, `git add` de archivos relevantes, `git commit -m "tipo: descripción"`.
+2. **NO hacer `git checkout develop`** sin merge previo. Quedarse en la rama feature con los commits aplicados. Si el usuario quiere merge, usar `/finish`.
+3. **Persistir el trabajo:** los agentes Cursor deben guardar el resultado de su trabajo. No revertir ni descartar cambios.
+
 ## When to delegate
 
 | Scenario | subagent_type | Use when |
@@ -18,12 +24,14 @@ Si el agente va a ejecutar un **plan** o cualquier tarea de edición: verificar 
 | Code review | `code-reviewer` | User asks for code review, quality check, or validation before commit |
 | Write/fix tests | `test-writer` | User needs comprehensive tests, coverage improvement, or failing test fixes |
 | Git operations | `git-ops` | User needs branching, conventional commits, or merge to develop |
+| Design audit | `generalPurpose` | User asks to verify design UI/UX only. Prompt: apply design-audit skill, no code changes |
 
 ## Usage
 
 - **code-reviewer**: Read-only review. Does not modify code. Runs lint + tests and reports issues.
 - **test-writer**: Creates or fixes tests. Uses Vitest + RTL patterns. Can read, write, edit, run bash.
 - **git-ops**: Manages git only. Never modifies source. Handles branch creation, commits, merges.
+- **generalPurpose** (design audit): Read-only. Applies design-audit checklist. Reports palette, contrast, responsive. Does not run lint/tests/build.
 
 ## Skills that may delegate
 
@@ -31,3 +39,4 @@ Si el agente va a ejecutar un **plan** o cualquier tarea de edición: verificar 
 - `/test`: delegate to test-writer for comprehensive test coverage
 - `/validate`: can delegate to code-reviewer for full review + validation
 - `/task` and `/finish`: git-ops handles branching and merges; main agent can also execute directly per skill steps
+- Design verification: delegate to generalPurpose with design-audit prompt (Claude: use design-verifier agent)

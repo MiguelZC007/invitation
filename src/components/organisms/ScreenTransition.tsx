@@ -1,30 +1,43 @@
 "use client";
 
 import { AnimatePresence, motion } from "motion/react";
-import { fadeIn, defaultTransition } from "@/theme/animationPresets";
+import {
+  fadeIn,
+  cloudTransition,
+  defaultTransition,
+  cloudTransitionTiming,
+} from "@/theme/animationPresets";
 import type { ReactNode } from "react";
+
+type ScreenTransitionVariant = "default" | "cloud";
 
 type ScreenTransitionProps = {
   screenKey: string;
   children: ReactNode;
   className?: string;
+  variant?: ScreenTransitionVariant;
 };
 
 export function ScreenTransition({
   screenKey,
   children,
   className = "",
+  variant = "default",
 }: ScreenTransitionProps) {
+  const variants = variant === "cloud" ? cloudTransition : fadeIn;
+  const transition =
+    variant === "cloud" ? cloudTransitionTiming : defaultTransition;
+
   return (
     <AnimatePresence mode="wait">
       <motion.div
         key={screenKey}
         className={className}
-        variants={fadeIn}
+        variants={variants}
         initial="hidden"
         animate="visible"
         exit="hidden"
-        transition={defaultTransition}
+        transition={transition}
       >
         {children}
       </motion.div>
