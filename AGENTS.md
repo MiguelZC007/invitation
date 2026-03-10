@@ -1,43 +1,120 @@
-# Agents (Cursor / AI)
+# Agents Guide — Invitation Project
 
-## Reglas del proyecto
+This document serves as the orchestration reference for AI agents (Claude Code, Cursor, and others).
 
-- **Package manager**: solo pnpm. No usar npm ni yarn.
-- **Next.js 16**: App Router, `output: 'export'` (sitio estático). Rutas bajo `src/app/[locale]/` con next-intl. `params` es Promise — siempre `await params`.
-- **React 19**: no forwardRef, no React.FC. Named exports, props como `type`, destructurar en firma.
-- **TypeScript 5.9**: strict mode, nunca `any`, usar `unknown`. Types sobre interfaces para props.
-- **Idioma**: código y commits en inglés; mensajes de usuario y documentación en español.
-- **Testing**: Vitest + React Testing Library. Cobertura mínima 80%. Tests colocados junto a componentes (`*.test.tsx`). Ejecutar TODOS los tests antes de commit/merge.
-- **Estructura**: Atomic Design (atoms, molecules, organisms); plantillas en `src/templates/`; tema en `src/theme/`; i18n en `src/i18n/` y `src/messages/`.
-- **Diseño**: Tailwind CSS v4 con `@theme inline`; clases estáticas para variantes. Motion (`motion/react`) para animaciones con presets de `@/theme/animationPresets`.
-- **No barrel exports**: no `index.ts` re-exportando. Importar siempre desde ruta directa (`@/components/atoms/Button`, no `@/components/atoms`). ESLint enforce.
+## Architecture overview
+
+```
+.claude/
+├── rules/          ← Best practices, auto-loaded by file context
+│   ├── nextjs.md        (src/app/**)
+│   ├── react.md         (*.tsx)
+│   ├── testing.md       (*.test.*)
+│   ├── styling.md       (*.tsx, *.css)
+│   ├── imports.md       (global)
+│   ├── typescript.md    (*.ts, *.tsx)
+│   ├── i18n.md          (*.ts, *.tsx, *.json)
+│   └── git-workflow.md  (global)
+├── agents/         ← Specialized AI assistants
+│   ├── code-reviewer.md  (read-only review, lint, tests)
+│   ├── test-writer.md     (create/fix tests, coverage)
+│   └── git-ops.md         (branching, commits, merges)
+├── skills/         ← User-invocable workflows
+│   ├── task/        → /task: create branch from develop
+│   ├── component/   → /component: create component + tests
+│   ├── template/    → /template: create template + route
+│   ├── test/        → /test: write/run tests
+│   ├── validate/    → /validate: lint + tests + coverage + build
+│   └── finish/      → /finish: validate + merge to develop
+└── settings.json   ← Hooks and shared settings
+```
+
+## Project stack
+
+| Tech          | Version  | Key notes                                    |
+|---------------|----------|----------------------------------------------|
+| Next.js       | 16.1.6   | App Router, `output: 'export'`, `await params` |
+| React         | 19.2.3   | No forwardRef/FC, named exports, ref as prop |
+| TypeScript    | 5.9      | Strict mode, no `any`, type over interface   |
+| Tailwind CSS  | 4.x      | `@theme inline`, static class names          |
+| Motion        | 12.x     | `motion/react`, presets in animationPresets   |
+| next-intl     | 4.8.3    | es (default), en; `setRequestLocale`         |
+| Vitest        | 4.x      | + RTL + jest-dom; 80% coverage thresholds    |
+| pnpm          | 10.28.2  | Only package manager allowed                 |
 
 ## Git workflow
 
-- Rama de desarrollo: `develop`. Producción: `main`.
-- Nunca commit directo a `main` o `develop`.
-- Crear rama feature desde `develop`, trabajar, validar, mergear a `develop`.
-- Conventional commits: `feat:`, `fix:`, `refactor:`, `test:`, `docs:`, `chore:`.
-- Validaciones pre-merge: `pnpm lint` + `pnpm test:run` + `pnpm coverage` + `pnpm build`.
-- Merge con `--no-ff`. No push automático.
+```
+main (production — user merges manually)
+ └── develop (integration)
+      └── feat/my-feature (work here)
+           ├── commit: feat: add component
+           ├── commit: test: add tests
+           └── /finish → validate → merge --no-ff → develop
+```
 
-## Rules contextuales
+- **Start**: `/task feat/branch-name` (or manually: `git checkout -b feat/name develop`)
+- **Work**: implement, test, commit with conventional commits
+- **End**: `/finish` validates lint + ALL tests + coverage + build, then merges to develop
+- **Deploy**: user merges develop → main manually
 
-Las reglas detalladas están en `.claude/rules/`:
-- `nextjs.md` — reglas específicas de Next.js 16 (scope: `src/app/`)
-- `react.md` — patrones de React 19 (scope: `*.tsx`)
-- `testing.md` — estándares de testing Vitest + RTL (scope: `*.test.*`)
-- `styling.md` — Tailwind CSS v4 + Motion (scope: `*.tsx`, `*.css`)
-- `imports.md` — reglas de importación, no barrel exports (global)
-- `typescript.md` — TypeScript strict rules (scope: `*.ts`, `*.tsx`)
-- `i18n.md` — next-intl 4.x (scope: `*.ts`, `*.tsx`, `*.json`)
-- `git-workflow.md` — branching, commits, validaciones (global)
+## Mandatory validations (before any merge)
 
-## Commands (slash commands)
+```bash
+pnpm lint          # ESLint — no errors
+pnpm test:run      # ALL tests pass (not just new ones)
+pnpm coverage      # 80% lines, functions, branches, statements
+pnpm build         # Static export succeeds
+```
 
-- `/task` — Iniciar tarea: crea rama feature desde develop
-- `/component` — Crear/modificar componente con tests
-- `/template` — Crear/modificar template de invitación
-- `/test` — Crear/ejecutar tests para un componente
-- `/validate` — Ejecutar lint + tests + coverage + build
-- `/finish` — Validar todo y mergear rama a develop
+## Project structure
+
+```
+src/
+├── app/                          # App Router
+│   ├── globals.css               # Tailwind @theme inline
+│   ├── layout.tsx                # Root layout (fonts, metadata)
+│   ├── page.tsx                  # Redirects to /es
+│   └── [locale]/                 # i18n routes
+│       ├── layout.tsx            # NextIntlClientProvider
+│       ├── page.tsx              # Home
+│       ├── invitation/           # Invitation routes
+│       └── templates/            # Template preview routes
+├── components/                   # Atomic Design
+│   ├── atoms/                    # Button, Icon, Text
+│   ├── molecules/                # DateTimeBlock, LocationBlock, TitleSubtitle
+│   └── organisms/                # InvitationHeader, InvitationBody, ScreenTransition
+├── templates/                    # Invitation templates
+│   ├── SinglePageInvitation.tsx
+│   └── MultiScreenInvitation.tsx
+├── theme/                        # Design tokens (NO index.ts)
+│   ├── tokens.ts
+│   └── animationPresets.ts
+├── i18n/                         # Internationalization config
+│   ├── routing.ts
+│   └── request.ts
+└── messages/                     # Translation files
+    ├── es.json
+    └── en.json
+```
+
+## Non-negotiable rules
+
+1. **No barrel exports**: never `index.ts`. Import `@/components/atoms/Button`, not `@/components/atoms`.
+2. **Only pnpm**: no npm, no yarn.
+3. **ALL tests must pass** before commit or merge.
+4. **Never commit to main or develop** directly.
+5. **Conventional commits** in English: `feat:`, `fix:`, `refactor:`, `test:`, `docs:`, `chore:`.
+6. **TypeScript strict**: no `any`, no type assertions without justification.
+7. **Accessible by default**: semantic HTML, ARIA, keyboard support.
+
+## Agent delegation guide
+
+| Task                        | Delegate to     | Skill to use  |
+|-----------------------------|-----------------|---------------|
+| Create new component        | (self + test-writer) | `/component` |
+| Create new template         | (self + test-writer) | `/template`  |
+| Write or fix tests          | test-writer     | `/test`       |
+| Review code quality         | code-reviewer   | (manual)      |
+| Branch/commit/merge         | git-ops         | `/task`, `/finish` |
+| Full project validation     | code-reviewer   | `/validate`   |

@@ -1,37 +1,95 @@
-# Claude Code Rules
+# Invitation Project — Orchestration Guide
 
-## Imports
+This document is the central orchestrator. It tells Claude where everything is and how to use each system.
 
-- **No barrel exports**: nunca crear archivos `index.ts` que re-exporten módulos. Importar siempre desde la ruta directa del archivo.
-  - Correcto: `import { Button } from "@/components/atoms/Button"`
-  - Incorrecto: `import { Button } from "@/components/atoms"`
-- Esto aplica a todos los directorios: `components/`, `templates/`, `theme/`, etc.
-- La regla está reforzada con `no-restricted-imports` en ESLint.
+## Quick reference
 
-## Package manager
+| System    | Location                  | Purpose                          |
+|-----------|---------------------------|----------------------------------|
+| Rules     | `.claude/rules/*.md`      | Best practices auto-loaded by file context |
+| Skills    | `.claude/skills/*/SKILL.md` | User-invocable workflows (`/task`, `/component`, etc.) |
+| Agents    | `.claude/agents/*.md`     | Specialized AI assistants for delegation |
+| Hooks     | `.claude/settings.json`   | Deterministic enforcement (pre/post tool) |
 
-- Solo pnpm. No usar npm ni yarn.
+## Workflow
 
-## Testing
+```
+/task feat/my-feature     →  creates branch from develop
+  ↓
+/component atom Button    →  creates component + tests + commit
+/template GalaInvitation  →  creates template + route + commit
+/test Button              →  writes/runs tests + commit
+  ↓
+/validate                 →  lint + ALL tests + coverage + build
+  ↓
+/finish                   →  validates everything → merge to develop
+```
 
-- Vitest + React Testing Library. Tests junto al componente (`*.test.tsx`).
-- `pnpm test:run` para una pasada, `pnpm coverage` para cobertura con umbrales.
-- Antes de cualquier commit o merge: ejecutar TODOS los tests (`pnpm test:run`), no solo los nuevos.
+Always start from `develop`. Never commit to `main` or `develop` directly.
 
-## Git workflow
+## Rules (auto-loaded by file context)
 
-- Rama de desarrollo: `develop`. Rama de producción: `main`.
-- NUNCA hacer commit directo a `main` o `develop`. Siempre crear rama feature desde `develop`.
-- Nomenclatura: `feat/`, `fix/`, `refactor/`, `test/`, `docs/`, `chore/` + descripción en kebab-case.
-- Conventional commits en inglés: `feat:`, `fix:`, `refactor:`, `test:`, `docs:`, `chore:`.
-- Validaciones antes de merge: lint + ALL tests + coverage (80%) + build.
-- Merge con `--no-ff`. No hacer push automáticamente.
+| Rule       | Scope                  | Enforces                                  |
+|------------|------------------------|--------------------------------------------|
+| nextjs     | `src/app/**`           | Next.js 16: async params, static export    |
+| react      | `*.tsx`                | React 19: no legacy APIs, named exports    |
+| testing    | `*.test.*`             | Vitest + RTL: accessible queries, coverage |
+| styling    | `*.tsx`, `*.css`       | Tailwind v4 static classes, Motion presets |
+| imports    | global                 | No barrel exports, direct `@/*` paths      |
+| typescript | `*.ts`, `*.tsx`        | Strict: no `any`, type over interface      |
+| i18n       | `*.ts`, `*.tsx`, `*.json` | next-intl: locales sync, setRequestLocale |
+| git-workflow | global               | Branching, conventional commits, validations |
 
-## Commands disponibles
+Rules load automatically when editing matching files. No manual invocation needed.
 
-- `/task <nombre-rama>` — Crear rama feature desde develop para iniciar una tarea.
-- `/component <nivel> <Nombre> [desc]` — Crear/modificar componente (atom, molecule, organism).
-- `/template <Nombre> [desc]` — Crear/modificar template de invitación.
-- `/test <Nombre>` — Crear/ejecutar tests para un componente.
-- `/validate` — Ejecutar todas las validaciones (lint, tests, coverage, build).
-- `/finish` — Validar todo y mergear la rama actual a develop.
+## Skills (user-invocable slash commands)
+
+| Command                            | What it does                              |
+|-------------------------------------|-------------------------------------------|
+| `/task <branch-name>`              | Create feature branch from develop        |
+| `/component <level> <Name> [desc]` | Create/modify component + tests + commit  |
+| `/template <Name> [desc]`         | Create/modify template + route + commit   |
+| `/test <Name>`                     | Write/run tests for a component           |
+| `/validate`                        | Run lint + tests + coverage + build       |
+| `/finish`                          | Validate all + merge branch to develop    |
+
+Each skill handles the full cycle: implement → test → lint → commit.
+
+## Agents (specialized delegation)
+
+| Agent          | Use when                                    | Can do         |
+|----------------|---------------------------------------------|----------------|
+| code-reviewer  | Need to review code quality and practices   | Read, Bash     |
+| test-writer    | Need to create or fix tests                 | Read, Write, Edit, Bash |
+| git-ops        | Need branching, committing, or merging      | Read, Bash     |
+
+Agents run in isolated context. Delegate to them for focused subtasks.
+
+## Critical rules (always enforced)
+
+### Imports
+- **No barrel exports**: never create `index.ts` re-export files.
+- Import from direct path: `import { Button } from "@/components/atoms/Button"`.
+- Enforced by ESLint `no-restricted-imports`.
+
+### Package manager
+- **Only pnpm**. Never npm or yarn.
+
+### Testing
+- Vitest + React Testing Library. Tests colocated: `*.test.tsx`.
+- Run ALL tests before any commit: `pnpm test:run`.
+- Coverage thresholds: 80% (lines, functions, branches, statements).
+
+### Git workflow
+- Branch from `develop`, merge back to `develop` with `--no-ff`.
+- Conventional commits: `feat:`, `fix:`, `refactor:`, `test:`, `docs:`, `chore:`.
+- Pre-merge: lint + ALL tests + coverage + build must pass.
+- Never push automatically. User decides when to push.
+
+### Code standards
+- TypeScript strict: no `any`. Props as `type`, not `interface`.
+- React 19: no `forwardRef`, no `React.FC`. Named exports only.
+- Next.js 16: `await params`, `setRequestLocale()`, `"use client"` only when needed.
+- Tailwind: static utility classes. No dynamic class interpolation.
+- Motion: import from `motion/react`, use presets from `@/theme/animationPresets`.
+- Accessibility: semantic HTML, ARIA roles, keyboard support.
