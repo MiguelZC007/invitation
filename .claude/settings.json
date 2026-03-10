@@ -1,0 +1,33 @@
+{
+  "permissions": {
+    "deny": [
+      "Bash(npm install *)",
+      "Bash(npm i *)",
+      "Bash(npm run *)",
+      "Bash(yarn *)"
+    ]
+  },
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Write|Edit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "if echo \"$CLAUDE_TOOL_INPUT\" | grep -q '\"file_path\".*index\\.ts' && echo \"$CLAUDE_TOOL_INPUT\" | grep -q 'export.*from'; then echo 'BLOCKED: No barrel exports (index.ts re-exports). Import from direct file paths.' >&2; exit 2; fi"
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "echo 'Reminder: run /validate before /finish to ensure all checks pass.'"
+          }
+        ]
+      }
+    ]
+  }
+}
