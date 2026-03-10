@@ -49,6 +49,7 @@ PRIMERO: git branch --show-current → si main/develop → crear rama feat/... d
 | Validar proyecto            | `.cursor/skills/validate/SKILL.md`   | lint + tests + coverage + build |
 | Finalizar, mergear          | `.cursor/skills/finish/SKILL.md`     | Validar + merge a develop       |
 | Implementar/corregir diseño UI/UX | `.cursor/skills/ui-design/SKILL.md` | Aplicar buenas prácticas de diseño |
+| Crear/modificar SVG, iconos, ilustraciones | `.cursor/skills/svg-design/SKILL.md` | Buenas prácticas SVG inline |
 | Verificar diseño UI/UX     | `.cursor/skills/design-audit/SKILL.md` | Auditar paleta, contraste, responsive |
 
 Si el usuario pide "añade un Botón" o "crea feat/button", aplicar el skill sin esperar `/task` o `/component`.
@@ -67,6 +68,7 @@ Si el usuario pide "añade un Botón" o "crea feat/button", aplicar el skill sin
 | git-workflow | `.cursor/rules/git-workflow.mdc`   | alwaysApply       |
 | agent-delegation | `.cursor/rules/agent-delegation.mdc` | alwaysApply  |
 | ui-design | `.cursor/rules/ui-design.mdc`        | `*.tsx`, `*.css`, `src/theme/**` |
+| svg-design | `.cursor/rules/svg-design.mdc`      | `src/**/*.{tsx,svg}` |
 
 ## Delegación a agents (mcp_task)
 
