@@ -21,4 +21,16 @@ describe("Button", () => {
     const btn = screen.getByRole("button", { name: "Wide" });
     expect(btn).toHaveClass("w-full");
   });
+
+  it("renders with accent variant", () => {
+    render(<Button variant="accent">Accent</Button>);
+    const btn = screen.getByRole("button", { name: "Accent" });
+    expect(btn).toHaveClass("bg-amber-600");
+  });
+
+  it("has minimum touch target size", () => {
+    render(<Button>Touch</Button>);
+    const btn = screen.getByRole("button", { name: "Touch" });
+    expect(btn).toHaveClass("min-h-[44px]");
+  });
 });

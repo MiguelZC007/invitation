@@ -26,6 +26,12 @@
   --font-mono: var(--font-geist-mono);
 }
 
+[data-template="fairy-tale-wedding"] {
+  --accent: #d97706;
+  --accent-hover: #b45309;
+  --accent-muted: #92400e;
+}
+
 @media (prefers-color-scheme: dark) {
   :root {
     --background: #0a0a0a;

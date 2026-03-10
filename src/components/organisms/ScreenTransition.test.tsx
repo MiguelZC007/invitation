@@ -11,4 +11,13 @@ describe("ScreenTransition", () => {
     );
     expect(screen.getByText("Screen content")).toBeInTheDocument();
   });
+
+  it("accepts cloud variant", () => {
+    render(
+      <ScreenTransition screenKey="cloud-test" variant="cloud">
+        <p>Cloud content</p>
+      </ScreenTransition>,
+    );
+    expect(screen.getByText("Cloud content")).toBeInTheDocument();
+  });
 });

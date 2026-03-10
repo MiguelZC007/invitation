@@ -26,7 +26,17 @@ export const staggerContainer: Variants = {
   },
 };
 
+export const cloudTransition: Variants = {
+  hidden: { opacity: 0, scale: 1.02 },
+  visible: { opacity: 1, scale: 1 },
+};
+
 export const defaultTransition: Transition = {
   duration: transitionDuration.normal,
+  ease: "easeOut",
+};
+
+export const cloudTransitionTiming: Transition = {
+  duration: 0.6,
   ease: "easeOut",
 };

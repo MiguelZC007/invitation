@@ -48,6 +48,8 @@ PRIMERO: git branch --show-current → si main/develop → crear rama feat/... d
 | Escribir o corregir tests   | `.cursor/skills/test/SKILL.md`       | Tests + commit                  |
 | Validar proyecto            | `.cursor/skills/validate/SKILL.md`   | lint + tests + coverage + build |
 | Finalizar, mergear          | `.cursor/skills/finish/SKILL.md`     | Validar + merge a develop       |
+| Implementar/corregir diseño UI/UX | `.cursor/skills/ui-design/SKILL.md` | Aplicar buenas prácticas de diseño |
+| Verificar diseño UI/UX     | `.cursor/skills/design-audit/SKILL.md` | Auditar paleta, contraste, responsive |
 
 Si el usuario pide "añade un Botón" o "crea feat/button", aplicar el skill sin esperar `/task` o `/component`.
 
@@ -64,6 +66,7 @@ Si el usuario pide "añade un Botón" o "crea feat/button", aplicar el skill sin
 | imports  | `.cursor/rules/imports.mdc`           | alwaysApply       |
 | git-workflow | `.cursor/rules/git-workflow.mdc`   | alwaysApply       |
 | agent-delegation | `.cursor/rules/agent-delegation.mdc` | alwaysApply  |
+| ui-design | `.cursor/rules/ui-design.mdc`        | `*.tsx`, `*.css`, `src/theme/**` |
 
 ## Delegación a agents (mcp_task)
 
@@ -72,6 +75,7 @@ Si el usuario pide "añade un Botón" o "crea feat/button", aplicar el skill sin
 | Revisar código            | `code-reviewer` |
 | Escribir/corregir tests   | `test-writer`   |
 | Branching, commits, merge | `git-ops`       |
+| Verificar diseño UI/UX    | `generalPurpose` con prompt design-audit |
 
 Usar cuando la tarea requiera especialista aislado, sin que el usuario lo pida.
 
@@ -81,3 +85,4 @@ Usar cuando la tarea requiera especialista aislado, sin que el usuario lo pida.
 - Solo pnpm (no npm, no yarn)
 - Tests: Vitest + RTL, cobertura 80%
 - Git: conventional commits, merge `--no-ff`
+- **Persistir cambios**: Al completar un plan, SIEMPRE hacer commit. NUNCA revertir a develop sin merge. Permanecer en la rama feature con los commits aplicados.
