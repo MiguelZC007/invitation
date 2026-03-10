@@ -31,6 +31,15 @@
     "farewellMessage": "Con cariño, esperamos verte pronto",
     "invitationLink": "Ver invitación"
   },
+  "birthdayInvitation": {
+    "title": "¡Cumpleaños de [nombre]!",
+    "subtitle": "Te esperamos para celebrar",
+    "welcomeMessage": "Ven a celebrar con nosotros este día especial. Habrá pastel, música y mucha diversión.",
+    "countdownLabel": "Faltan",
+    "targetDateLabel": "15 de junio de 2026, 18:00 h",
+    "farewellMessage": "¡Te esperamos! No faltes a la fiesta.",
+    "invitationLink": "Ver invitación de cumpleaños"
+  },
   "christmasInvitation": {
     "title": "Feliz Navidad",
     "subtitle": "Te invitamos a celebrar",
