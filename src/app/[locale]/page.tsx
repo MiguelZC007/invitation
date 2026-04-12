@@ -26,28 +26,28 @@ export function HomeContent() {
       label: ti("title"),
       description: t("home.singleInvitationDescription"),
       className:
-        "border-primary/30 bg-primary/5 text-primary hover:border-primary/50 hover:bg-primary/10",
+        "rounded-xl border border-primary/30 bg-primary/5 p-5 text-primary transition-colors hover:border-primary/50 hover:bg-primary/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2",
     },
     {
       href: "/invitation/birthday",
       label: tb("invitationLink"),
-      description: tb("subtitle"),
+      description: tb("introMessage"),
       className:
-        "border-pink-500/30 bg-pink-500/5 text-pink-700 hover:border-pink-500/50 hover:bg-pink-500/10",
+        "rounded-xl border border-pink-500/30 bg-pink-500/5 p-5 text-pink-700 transition-colors hover:border-pink-500/50 hover:bg-pink-500/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2",
     },
     {
       href: "/invitation/fairy-tale-wedding",
       label: tf("invitationLink"),
       description: tf("subtitle"),
       className:
-        "border-amber-500/30 bg-amber-500/5 text-amber-700 hover:border-amber-500/50 hover:bg-amber-500/10",
+        "rounded-xl border border-amber-500/30 bg-amber-500/5 p-5 text-amber-700 transition-colors hover:border-amber-500/50 hover:bg-amber-500/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2",
     },
     {
       href: "/invitation/christmas",
       label: tc("invitationLink"),
       description: tc("subtitle"),
       className:
-        "border-red-500/30 bg-red-500/5 text-red-700 hover:border-red-500/50 hover:bg-red-500/10",
+        "rounded-xl border border-red-500/30 bg-red-500/5 p-5 text-red-700 transition-colors hover:border-red-500/50 hover:bg-red-500/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2",
     },
   ];
 
@@ -57,7 +57,7 @@ export function HomeContent() {
       label: t("home.multiTemplateLabel"),
       description: t("home.multiTemplateDescription"),
       className:
-        "border-slate-500/30 bg-slate-500/5 text-slate-700 hover:border-slate-500/50 hover:bg-slate-500/10",
+        "rounded-xl border border-slate-500/30 bg-slate-500/5 p-5 text-slate-700 transition-colors hover:border-slate-500/50 hover:bg-slate-500/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2",
     },
   ];
 
@@ -77,11 +77,7 @@ export function HomeContent() {
         </h2>
         <div className="grid gap-4 sm:grid-cols-2">
           {invitationLinks.map((item) => (
-            <Link
-              key={item.href}
-              href={item.href}
-              className={`rounded-xl border p-5 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 ${item.className}`}
-            >
+            <Link key={item.href} href={item.href} className={item.className}>
               <span className="block text-base font-semibold">
                 {item.label}
               </span>
@@ -102,11 +98,7 @@ export function HomeContent() {
         </h2>
         <div className="grid gap-4 sm:grid-cols-2">
           {templateLinks.map((item) => (
-            <Link
-              key={item.href}
-              href={item.href}
-              className={`rounded-xl border p-5 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 ${item.className}`}
-            >
+            <Link key={item.href} href={item.href} className={item.className}>
               <span className="block text-base font-semibold">
                 {item.label}
               </span>
