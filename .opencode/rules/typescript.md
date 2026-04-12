@@ -1,0 +1,15 @@
+---
+globs: ["src/**/*.{ts,tsx}"]
+---
+
+# TypeScript Rules (strict mode)
+
+- Strict mode habilitado — NUNCA usar `any`. Usar `unknown` si el tipo es desconocido.
+- Props con `type` (no `interface`): `type Props = { variant: "primary" | "secondary" }`.
+- Exportar tipos junto al componente cuando otros módulos los necesiten.
+- Discriminated unions para props de variante.
+- No type assertions (`as`) salvo necesidad absolutamente justificada y documentada.
+- Template literal types para string unions donde sea apropiado.
+- Usar `satisfies` para validar tipos sin ampliar la inferencia.
+- Generic constraints con `extends` — no any en generics.
+- Funciones: tipar parámetros y retorno cuando no sea obvio por inferencia.
