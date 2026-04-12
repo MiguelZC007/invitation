@@ -11,6 +11,15 @@ const defaultProps = {
   targetDate: new Date("2026-06-15T18:00:00"),
   targetDateLabel: "15 de junio de 2026",
   farewellMessage: "¡Te esperamos! No faltes.",
+  nextLabel: "Siguiente",
+  prevLabel: "Anterior",
+  navigationLabel: "Navegación de pantallas",
+  countdownUnitLabels: {
+    days: "días",
+    hours: "horas",
+    minutes: "min",
+    seconds: "seg",
+  },
 };
 
 describe("BirthdayInvitation", () => {
@@ -28,7 +37,9 @@ describe("BirthdayInvitation", () => {
     const user = userEvent.setup();
     render(<BirthdayInvitation {...defaultProps} />);
 
-    const nextButton = screen.getByRole("button", { name: "Siguiente" });
+    const nextButton = screen.getByRole("button", {
+      name: defaultProps.nextLabel,
+    });
     await user.click(nextButton);
 
     await waitFor(() => {
@@ -40,15 +51,21 @@ describe("BirthdayInvitation", () => {
     const user = userEvent.setup();
     render(<BirthdayInvitation {...defaultProps} />);
 
-    await user.click(screen.getByRole("button", { name: "Siguiente" }));
+    await user.click(
+      screen.getByRole("button", { name: defaultProps.nextLabel }),
+    );
     await waitFor(() => {
       expect(screen.getByText(defaultProps.countdownLabel)).toBeInTheDocument();
     });
 
-    await user.click(screen.getByRole("button", { name: "Siguiente" }));
+    await user.click(
+      screen.getByRole("button", { name: defaultProps.nextLabel }),
+    );
 
     await waitFor(() => {
-      expect(screen.getByText(defaultProps.farewellMessage)).toBeInTheDocument();
+      expect(
+        screen.getByText(defaultProps.farewellMessage),
+      ).toBeInTheDocument();
     });
   });
 
@@ -56,19 +73,27 @@ describe("BirthdayInvitation", () => {
     const user = userEvent.setup();
     render(<BirthdayInvitation {...defaultProps} />);
 
-    await user.click(screen.getByRole("button", { name: "Siguiente" }));
+    await user.click(
+      screen.getByRole("button", { name: defaultProps.nextLabel }),
+    );
 
     await waitFor(() => {
-      expect(screen.getByText("días")).toBeInTheDocument();
-      expect(screen.getByText("horas")).toBeInTheDocument();
-      expect(screen.getByText(defaultProps.targetDateLabel)).toBeInTheDocument();
+      expect(
+        screen.getByText(defaultProps.countdownUnitLabels.days),
+      ).toBeInTheDocument();
+      expect(
+        screen.getByText(defaultProps.countdownUnitLabels.hours),
+      ).toBeInTheDocument();
+      expect(
+        screen.getByText(defaultProps.targetDateLabel),
+      ).toBeInTheDocument();
     });
   });
 
   it("has navigation landmark", () => {
     render(<BirthdayInvitation {...defaultProps} />);
     expect(screen.getByRole("navigation")).toHaveAccessibleName(
-      "Navegación de pantallas",
+      defaultProps.navigationLabel,
     );
   });
 

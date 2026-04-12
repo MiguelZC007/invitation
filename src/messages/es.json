@@ -4,7 +4,23 @@
     "welcome": "Bienvenido",
     "next": "Siguiente",
     "prev": "Anterior",
-    "rsvp": "Confirmar asistencia"
+    "rsvp": "Confirmar asistencia",
+    "screenNavigation": "Navegación de pantallas",
+    "countdown": {
+      "days": "días",
+      "hours": "horas",
+      "minutes": "min",
+      "seconds": "seg"
+    },
+    "home": {
+      "title": "Invitaciones y rutas disponibles",
+      "subtitle": "Elegí una invitación o revisá las plantillas activas del proyecto.",
+      "invitationsSection": "Invitaciones",
+      "templatesSection": "Plantillas",
+      "singleInvitationDescription": "Versión de una sola pantalla con datos clave y botón de confirmación.",
+      "multiTemplateLabel": "Template multi-screen",
+      "multiTemplateDescription": "Vista base para navegación entre pantallas con transición."
+    }
   },
   "invitation": {
     "title": "Te invitamos",

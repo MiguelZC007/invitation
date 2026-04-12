@@ -15,7 +15,7 @@ type SinglePageInvitationProps = {
   locationName: string;
   locationAddress: string;
   mapUrl?: string;
-  rsvpLabel?: string;
+  rsvpLabel: string;
 };
 
 export function SinglePageInvitation({
@@ -27,7 +27,7 @@ export function SinglePageInvitation({
   locationName,
   locationAddress,
   mapUrl,
-  rsvpLabel = "Confirmar asistencia",
+  rsvpLabel,
 }: SinglePageInvitationProps) {
   return (
     <div className="flex min-h-screen flex-col items-center">

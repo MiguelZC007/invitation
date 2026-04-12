@@ -4,7 +4,23 @@
     "welcome": "Welcome",
     "next": "Next",
     "prev": "Previous",
-    "rsvp": "RSVP"
+    "rsvp": "RSVP",
+    "screenNavigation": "Screen navigation",
+    "countdown": {
+      "days": "days",
+      "hours": "hours",
+      "minutes": "min",
+      "seconds": "sec"
+    },
+    "home": {
+      "title": "Available invitations and routes",
+      "subtitle": "Choose an invitation or review the active project templates.",
+      "invitationsSection": "Invitations",
+      "templatesSection": "Templates",
+      "singleInvitationDescription": "Single-screen version with key event details and RSVP action.",
+      "multiTemplateLabel": "Multi-screen template",
+      "multiTemplateDescription": "Base preview for screen navigation with transitions."
+    }
   },
   "invitation": {
     "title": "You are invited",

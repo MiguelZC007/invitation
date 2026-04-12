@@ -13,6 +13,15 @@ const defaultProps = {
   locationName: "Cochabamba",
   locationAddress: "Cochabamba, Bolivia",
   farewellMessage: "Con cariño, nos vemos pronto",
+  nextLabel: "Siguiente",
+  prevLabel: "Anterior",
+  navigationLabel: "Navegación de pantallas",
+  countdownUnitLabels: {
+    days: "días",
+    hours: "horas",
+    minutes: "min",
+    seconds: "seg",
+  },
 };
 
 describe("FairyTaleWeddingInvitation", () => {
@@ -30,7 +39,9 @@ describe("FairyTaleWeddingInvitation", () => {
     const user = userEvent.setup();
     render(<FairyTaleWeddingInvitation {...defaultProps} />);
 
-    const nextButton = screen.getByRole("button", { name: "Siguiente" });
+    const nextButton = screen.getByRole("button", {
+      name: defaultProps.nextLabel,
+    });
     await user.click(nextButton);
 
     await waitFor(() => {
@@ -42,17 +53,25 @@ describe("FairyTaleWeddingInvitation", () => {
     const user = userEvent.setup();
     render(<FairyTaleWeddingInvitation {...defaultProps} />);
 
-    await user.click(screen.getByRole("button", { name: "Siguiente" }));
+    await user.click(
+      screen.getByRole("button", { name: defaultProps.nextLabel }),
+    );
     await waitFor(() => {
       expect(screen.getByText(defaultProps.countdownLabel)).toBeInTheDocument();
     });
 
-    await user.click(screen.getByRole("button", { name: "Siguiente" }));
+    await user.click(
+      screen.getByRole("button", { name: defaultProps.nextLabel }),
+    );
 
     await waitFor(() => {
       expect(screen.getByText(defaultProps.locationName)).toBeInTheDocument();
-      expect(screen.getByText(defaultProps.locationAddress)).toBeInTheDocument();
-      expect(screen.getByText(defaultProps.farewellMessage)).toBeInTheDocument();
+      expect(
+        screen.getByText(defaultProps.locationAddress),
+      ).toBeInTheDocument();
+      expect(
+        screen.getByText(defaultProps.farewellMessage),
+      ).toBeInTheDocument();
     });
   });
 
@@ -60,19 +79,27 @@ describe("FairyTaleWeddingInvitation", () => {
     const user = userEvent.setup();
     render(<FairyTaleWeddingInvitation {...defaultProps} />);
 
-    await user.click(screen.getByRole("button", { name: "Siguiente" }));
+    await user.click(
+      screen.getByRole("button", { name: defaultProps.nextLabel }),
+    );
 
     await waitFor(() => {
-      expect(screen.getByText("días")).toBeInTheDocument();
-      expect(screen.getByText("horas")).toBeInTheDocument();
-      expect(screen.getByText(defaultProps.targetDateLabel)).toBeInTheDocument();
+      expect(
+        screen.getByText(defaultProps.countdownUnitLabels.days),
+      ).toBeInTheDocument();
+      expect(
+        screen.getByText(defaultProps.countdownUnitLabels.hours),
+      ).toBeInTheDocument();
+      expect(
+        screen.getByText(defaultProps.targetDateLabel),
+      ).toBeInTheDocument();
     });
   });
 
   it("has navigation landmark", () => {
     render(<FairyTaleWeddingInvitation {...defaultProps} />);
     expect(screen.getByRole("navigation")).toHaveAccessibleName(
-      "Navegación de pantallas",
+      defaultProps.navigationLabel,
     );
   });
 });

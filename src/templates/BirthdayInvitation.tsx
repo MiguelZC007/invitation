@@ -15,8 +15,15 @@ type BirthdayInvitationProps = {
   targetDate: Date;
   targetDateLabel: string;
   farewellMessage: string;
-  nextLabel?: string;
-  prevLabel?: string;
+  nextLabel: string;
+  prevLabel: string;
+  navigationLabel: string;
+  countdownUnitLabels: {
+    days: string;
+    hours: string;
+    minutes: string;
+    seconds: string;
+  };
 };
 
 function BalloonDecoration() {
@@ -30,28 +37,48 @@ function BalloonDecoration() {
         viewBox="0 0 24 24"
       >
         <ellipse cx="12" cy="14" rx="8" ry="10" fill="currentColor" />
-        <path d="M12 4 L12 14 M8 12 L16 12" stroke="currentColor" strokeWidth="0.5" fill="none" />
+        <path
+          d="M12 4 L12 14 M8 12 L16 12"
+          stroke="currentColor"
+          strokeWidth="0.5"
+          fill="none"
+        />
       </svg>
       <svg
         className="absolute -right-12 top-32 h-32 w-32 text-amber-400/50"
         viewBox="0 0 24 24"
       >
         <ellipse cx="12" cy="14" rx="8" ry="10" fill="currentColor" />
-        <path d="M12 4 L12 14" stroke="currentColor" strokeWidth="0.5" fill="none" />
+        <path
+          d="M12 4 L12 14"
+          stroke="currentColor"
+          strokeWidth="0.5"
+          fill="none"
+        />
       </svg>
       <svg
         className="absolute -left-4 bottom-32 h-20 w-20 text-cyan-400/50"
         viewBox="0 0 24 24"
       >
         <ellipse cx="12" cy="14" rx="8" ry="10" fill="currentColor" />
-        <path d="M12 4 L12 14" stroke="currentColor" strokeWidth="0.5" fill="none" />
+        <path
+          d="M12 4 L12 14"
+          stroke="currentColor"
+          strokeWidth="0.5"
+          fill="none"
+        />
       </svg>
       <svg
         className="absolute right-16 bottom-24 h-28 w-28 text-rose-400/40"
         viewBox="0 0 24 24"
       >
         <ellipse cx="12" cy="14" rx="8" ry="10" fill="currentColor" />
-        <path d="M12 4 L12 14" stroke="currentColor" strokeWidth="0.5" fill="none" />
+        <path
+          d="M12 4 L12 14"
+          stroke="currentColor"
+          strokeWidth="0.5"
+          fill="none"
+        />
       </svg>
       <div className="absolute left-1/4 top-12 h-2 w-2 rounded-full bg-yellow-400/60" />
       <div className="absolute right-1/3 top-24 h-3 w-3 rounded-full bg-pink-400/50" />
@@ -84,8 +111,10 @@ export function BirthdayInvitation({
   targetDate,
   targetDateLabel,
   farewellMessage,
-  nextLabel = "Siguiente",
-  prevLabel = "Anterior",
+  nextLabel,
+  prevLabel,
+  navigationLabel,
+  countdownUnitLabels,
 }: BirthdayInvitationProps) {
   const screens: { key: string; content: ReactNode }[] = [
     {
@@ -113,10 +142,10 @@ export function BirthdayInvitation({
           </Text>
           <CountdownBlock
             targetDate={targetDate}
-            daysLabel="días"
-            hoursLabel="horas"
-            minutesLabel="min"
-            secondsLabel="seg"
+            daysLabel={countdownUnitLabels.days}
+            hoursLabel={countdownUnitLabels.hours}
+            minutesLabel={countdownUnitLabels.minutes}
+            secondsLabel={countdownUnitLabels.seconds}
             className="text-pink-600"
             labelClassName="text-amber-600"
           />
@@ -149,6 +178,7 @@ export function BirthdayInvitation({
           screens={screens}
           nextLabel={nextLabel}
           prevLabel={prevLabel}
+          navigationLabel={navigationLabel}
           transitionVariant="cloud"
           buttonVariant="accent"
         />

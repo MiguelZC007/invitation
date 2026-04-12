@@ -16,8 +16,15 @@ type FairyTaleWeddingInvitationProps = {
   locationName: string;
   locationAddress: string;
   farewellMessage: string;
-  nextLabel?: string;
-  prevLabel?: string;
+  nextLabel: string;
+  prevLabel: string;
+  navigationLabel: string;
+  countdownUnitLabels: {
+    days: string;
+    hours: string;
+    minutes: string;
+    seconds: string;
+  };
 };
 
 function CloudDecoration() {
@@ -43,30 +50,23 @@ export function FairyTaleWeddingInvitation({
   locationName,
   locationAddress,
   farewellMessage,
-  nextLabel = "Siguiente",
-  prevLabel = "Anterior",
+  nextLabel,
+  prevLabel,
+  navigationLabel,
+  countdownUnitLabels,
 }: FairyTaleWeddingInvitationProps) {
   const screens: { key: string; content: ReactNode }[] = [
     {
       key: "welcome",
       content: (
         <div className="flex flex-col items-center gap-6 px-6 text-center">
-          <Text
-            variant="h1"
-            className="text-amber-700 md:text-5xl"
-          >
+          <Text variant="h1" className="text-amber-700 md:text-5xl">
             {title}
           </Text>
-          <Text
-            variant="h3"
-            className="text-amber-600 md:text-3xl"
-          >
+          <Text variant="h3" className="text-amber-600 md:text-3xl">
             {subtitle}
           </Text>
-          <Text
-            variant="body"
-            className="max-w-md text-amber-800"
-          >
+          <Text variant="body" className="max-w-md text-amber-800">
             {welcomeMessage}
           </Text>
         </div>
@@ -76,18 +76,15 @@ export function FairyTaleWeddingInvitation({
       key: "countdown",
       content: (
         <div className="flex flex-col items-center gap-8 px-6 text-center">
-          <Text
-            variant="h2"
-            className="text-amber-700 md:text-4xl"
-          >
+          <Text variant="h2" className="text-amber-700 md:text-4xl">
             {countdownLabel}
           </Text>
           <CountdownBlock
             targetDate={targetDate}
-            daysLabel="días"
-            hoursLabel="horas"
-            minutesLabel="min"
-            secondsLabel="seg"
+            daysLabel={countdownUnitLabels.days}
+            hoursLabel={countdownUnitLabels.hours}
+            minutesLabel={countdownUnitLabels.minutes}
+            secondsLabel={countdownUnitLabels.seconds}
             className="text-amber-700"
             labelClassName="text-amber-700"
           />
@@ -127,6 +124,7 @@ export function FairyTaleWeddingInvitation({
           screens={screens}
           nextLabel={nextLabel}
           prevLabel={prevLabel}
+          navigationLabel={navigationLabel}
           transitionVariant="cloud"
           buttonVariant="accent"
         />

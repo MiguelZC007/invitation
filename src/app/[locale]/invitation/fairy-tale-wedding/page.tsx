@@ -32,6 +32,13 @@ function FairyTaleWeddingContent() {
       farewellMessage={t("farewellMessage")}
       nextLabel={tc("next")}
       prevLabel={tc("prev")}
+      navigationLabel={tc("screenNavigation")}
+      countdownUnitLabels={{
+        days: tc("countdown.days"),
+        hours: tc("countdown.hours"),
+        minutes: tc("countdown.minutes"),
+        seconds: tc("countdown.seconds"),
+      }}
     />
   );
 }
