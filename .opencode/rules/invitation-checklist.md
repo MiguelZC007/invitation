@@ -1,0 +1,26 @@
+# Invitation Checklist — No Suponer
+
+## Regla estricta (NO NEGOCIABLE)
+
+**La IA NUNCA debe suponer nada. Siempre debe preguntar al usuario.**
+
+- Sin el contexto correcto del usuario, NO se puede iniciar una tarea nueva de invitación.
+- Antes de crear o modificar un template: ejecutar el skill `invitation-context`.
+- Si falta información: formular las preguntas obligatorias y DETENER hasta obtener respuestas.
+- No inventar: contenido, fechas, lugares, nombres ni textos.
+
+## Skill a aplicar
+
+Leer y ejecutar `.opencode/skills/invitation-context/SKILL.md` antes del skill template cuando el usuario quiera añadir o modificar una invitación.
+
+## Información requerida (resumen)
+
+| Categoría | Campos clave |
+|-----------|--------------|
+| Definición | nombre template, slug, single/multi, tipo evento |
+| Contenido | título, subtítulo, mensaje, despedida |
+| Fecha/hora | fecha, hora, countdown |
+| Ubicación | lugar, dirección, mapUrl |
+| CTAs | next/prev, rsvp |
+| Visual | imágenes, colores, estilo |
+| i18n | locales |
