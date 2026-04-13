@@ -1,6 +1,6 @@
 import { useTranslations } from "next-intl";
 import { setRequestLocale } from "next-intl/server";
-import { BirthdayInvitation } from "@/templates/BirthdayInvitation";
+import { TotoroBirthdayInvitation } from "@/templates/TotoroBirthdayInvitation";
 
 type Props = {
   params: Promise<{ locale: string }>;
@@ -15,21 +15,24 @@ export default async function BirthdayInvitationPage({ params }: Props) {
 
 function BirthdayInvitationContent() {
   const t = useTranslations("birthdayInvitation");
-  const tc = useTranslations("common");
-
-  const targetDate = new Date("2026-06-15T18:00:00");
 
   return (
-    <BirthdayInvitation
+    <TotoroBirthdayInvitation
       title={t("title")}
       subtitle={t("subtitle")}
-      welcomeMessage={t("welcomeMessage")}
-      countdownLabel={t("countdownLabel")}
-      targetDate={targetDate}
-      targetDateLabel={t("targetDateLabel")}
+      introHeading={t("introHeading")}
+      celebrationHeading={t("celebrationHeading")}
+      farewellHeading={t("farewellHeading")}
+      introMessage={t("introMessage")}
+      celebrationMessage={t("celebrationMessage")}
       farewellMessage={t("farewellMessage")}
-      nextLabel={tc("next")}
-      prevLabel={tc("prev")}
+      detailsHeading={t("detailsHeading")}
+      dateLabel={t("dateLabel")}
+      timeLabel={t("timeLabel")}
+      locationLabel={t("locationLabel")}
+      eventDate={t("eventDate")}
+      eventTime={t("eventTime")}
+      eventAddress={t("eventAddress")}
     />
   );
 }

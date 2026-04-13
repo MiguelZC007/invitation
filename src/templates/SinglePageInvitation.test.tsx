@@ -11,6 +11,7 @@ describe("SinglePageInvitation", () => {
     time: "6:00 PM",
     locationName: "Grand Hall",
     locationAddress: "123 Main St",
+    rsvpLabel: "Confirmar asistencia",
   };
 
   it("renders title", () => {
@@ -20,7 +21,7 @@ describe("SinglePageInvitation", () => {
     ).toBeInTheDocument();
   });
 
-  it("renders RSVP button with default label", () => {
+  it("renders RSVP button with translated label", () => {
     render(<SinglePageInvitation {...defaultProps} />);
     const buttons = screen.getAllByRole("button", {
       name: "Confirmar asistencia",
@@ -36,9 +37,9 @@ describe("SinglePageInvitation", () => {
 
   it("renders location and date info", () => {
     render(<SinglePageInvitation {...defaultProps} />);
-    expect(
-      screen.getAllByText("June 15, 2026").length,
-    ).toBeGreaterThanOrEqual(1);
+    expect(screen.getAllByText("June 15, 2026").length).toBeGreaterThanOrEqual(
+      1,
+    );
     expect(screen.getAllByText("Grand Hall").length).toBeGreaterThanOrEqual(1);
   });
 });

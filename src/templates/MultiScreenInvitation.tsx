@@ -11,16 +11,18 @@ type Screen = {
 
 type MultiScreenInvitationProps = {
   screens: Screen[];
-  nextLabel?: string;
-  prevLabel?: string;
+  nextLabel: string;
+  prevLabel: string;
+  navigationLabel: string;
   transitionVariant?: "default" | "cloud";
   buttonVariant?: "default" | "accent";
 };
 
 export function MultiScreenInvitation({
   screens,
-  nextLabel = "Siguiente",
-  prevLabel = "Anterior",
+  nextLabel,
+  prevLabel,
+  navigationLabel,
   transitionVariant = "default",
   buttonVariant = "default",
 }: MultiScreenInvitationProps) {
@@ -41,7 +43,7 @@ export function MultiScreenInvitation({
         </ScreenTransition>
       </div>
 
-      <nav className="flex gap-4 pb-8" aria-label="Navegación de pantallas">
+      <nav className="flex gap-4 pb-8" aria-label={navigationLabel}>
         {!isFirst && (
           <Button
             variant={prevButtonVariant}

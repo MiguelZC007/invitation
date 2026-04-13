@@ -15,8 +15,15 @@ type ChristmasInvitationProps = {
   targetDate: Date;
   targetDateLabel: string;
   farewellMessage: string;
-  nextLabel?: string;
-  prevLabel?: string;
+  nextLabel: string;
+  prevLabel: string;
+  navigationLabel: string;
+  countdownUnitLabels: {
+    days: string;
+    hours: string;
+    minutes: string;
+    seconds: string;
+  };
 };
 
 const IMAGE_TREE = "/images/christmas/christmas-tree.png";
@@ -56,8 +63,10 @@ export function ChristmasInvitation({
   targetDate,
   targetDateLabel,
   farewellMessage,
-  nextLabel = "Siguiente",
-  prevLabel = "Anterior",
+  nextLabel,
+  prevLabel,
+  navigationLabel,
+  countdownUnitLabels,
 }: ChristmasInvitationProps) {
   const screens: { key: string; content: ReactNode }[] = [
     {
@@ -70,10 +79,7 @@ export function ChristmasInvitation({
           <Text variant="h3" className="text-white drop-shadow-md md:text-3xl">
             {subtitle}
           </Text>
-          <Text
-            variant="body"
-            className="max-w-md text-white drop-shadow-md"
-          >
+          <Text variant="body" className="max-w-md text-white drop-shadow-md">
             {welcomeMessage}
           </Text>
         </ScreenWithBackground>
@@ -88,10 +94,10 @@ export function ChristmasInvitation({
           </Text>
           <CountdownBlock
             targetDate={targetDate}
-            daysLabel="días"
-            hoursLabel="horas"
-            minutesLabel="min"
-            secondsLabel="seg"
+            daysLabel={countdownUnitLabels.days}
+            hoursLabel={countdownUnitLabels.hours}
+            minutesLabel={countdownUnitLabels.minutes}
+            secondsLabel={countdownUnitLabels.seconds}
             className="text-white drop-shadow-md"
             labelClassName="text-white/90 drop-shadow-md"
           />
@@ -105,10 +111,7 @@ export function ChristmasInvitation({
       key: "farewell",
       content: (
         <ScreenWithBackground backgroundImage={IMAGE_GRINCH}>
-          <Text
-            variant="body"
-            className="max-w-md text-white drop-shadow-lg"
-          >
+          <Text variant="body" className="max-w-md text-white drop-shadow-lg">
             {farewellMessage}
           </Text>
         </ScreenWithBackground>
@@ -126,6 +129,7 @@ export function ChristmasInvitation({
           screens={screens}
           nextLabel={nextLabel}
           prevLabel={prevLabel}
+          navigationLabel={navigationLabel}
           transitionVariant="cloud"
           buttonVariant="accent"
         />

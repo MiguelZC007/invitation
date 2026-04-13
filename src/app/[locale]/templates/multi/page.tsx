@@ -62,6 +62,7 @@ function MultiTemplateContent() {
       screens={screens}
       nextLabel={tc("next")}
       prevLabel={tc("prev")}
+      navigationLabel={tc("screenNavigation")}
     />
   );
 }

@@ -1,8 +1,8 @@
 # Agents Guide — Invitation Project
 
-Orquestador central (Claude, Cursor, etc.). Indica dónde están rules, skills y agents, y cómo usarlos automáticamente según el contexto.
+Orquestador central (Claude, Cursor, OpenCode, etc.). Indica dónde están rules, skills y agents, y cómo usarlos automáticamente según el contexto.
 
-Referencias por entorno: [CLAUDE.md](CLAUDE.md) (Claude Code), [CURSOR.md](CURSOR.md) (Cursor IDE).
+Referencias por entorno: [CLAUDE.md](CLAUDE.md) (Claude Code), [CURSOR.md](CURSOR.md) (Cursor IDE), OpenCode (config local en `.opencode/`).
 
 ## Uso automático (sin invocación explícita)
 
@@ -10,10 +10,11 @@ El agente debe detectar la intención del usuario y aplicar los sistemas corresp
 
 | Intención detectada | Acción automática |
 |--------------------|-------------------|
-| Usuario edita `src/app/**`, `*.tsx`, `*.test.*`, etc. | Reglas aplican por glob — leer `.cursor/rules/*.mdc` o `.claude/rules/*.md` según el entorno |
+| Usuario edita `src/app/**`, `*.tsx`, `*.test.*`, etc. | Reglas aplican por glob — leer `.cursor/rules/*.mdc`, `.claude/rules/*.md` o `.opencode/rules/*.md` según el entorno |
 | Usuario pide **nueva invitación** o crear/modificar template | PRIMERO `invitation-context` (obtener información). Sin contexto completo, NO iniciar. Luego `template`. |
 | Usuario pide crear rama, componente, tests, validar o mergear | Aplicar skill correspondiente — leer `SKILL.md` de la carpeta indicada |
 | Usuario pide revisión, tests, git, diseño UI/UX o SVG | Delegar a agent — `mcp_task` (Cursor) con `subagent_type` adecuado |
+| Usuario pide migrar/refactor a arquitectura hexagonal frontend | Aplicar skill `hexagonal-frontend` + auditar con `hexagonal-guardian` |
 
 No esperar a que el usuario escriba `/task` o `/component`. Si dice "añade un botón" o "crea la rama feat/button", aplicar el skill directamente.
 
@@ -22,29 +23,83 @@ No esperar a que el usuario escriba `/task` o `/component`. Si dice "añade un b
 ```
 .claude/                         ← Claude Code
 ├── rules/*.md                   ← Activación: archivos abiertos coinciden con globs
-├── agents/*.md                  ← Delegación explícita (code-reviewer, test-writer, git-ops, ui-designer, svg-designer, design-verifier)
+├── agents/*.md                  ← Delegación explícita (code-reviewer, test-writer, git-ops, ui-designer, svg-designer, design-verifier, hexagonal-guardian)
 ├── skills/<nombre>/SKILL.md     ← Activación: intención del usuario coincide con description
 └── settings.json                ← Hooks automáticos
 
 .cursor/                         ← Cursor IDE
 ├── rules/*.mdc                  ← Activación: Apply Intelligently o Apply to Specific Files
-├── agents/*.md                 ← Delegación: code-reviewer, test-writer, git-ops, ui-designer, svg-designer, design-verifier
+├── agents/*.md                 ← Delegación: code-reviewer, test-writer, git-ops, ui-designer, svg-designer, design-verifier, hexagonal-guardian
 ├── skills/<nombre>/SKILL.md     ← Activación: Agent decide por description, o /skill-name
-└── (agents vía mcp_task)        ← subagent_type: code-reviewer | test-writer | git-ops | ui-designer | svg-designer | design-verifier
+└── (agents vía mcp_task)        ← subagent_type: code-reviewer | test-writer | git-ops | ui-designer | svg-designer | design-verifier | hexagonal-guardian
+
+.opencode/                       ← OpenCode (configuración local del repo)
+├── opencode.json                ← Orquestador principal del proyecto (`default_agent`)
+├── rules/*.md                   ← Activación por globs/frontmatter (según soporte del runner)
+├── agents/*.md                  ← Auditores/especialistas invocables por nombre
+└── skills/<nombre>/SKILL.md     ← Activación por intención + `description`
 ```
 
 **Rules**: Se cargan solas cuando archivos coinciden. No invocar manualmente.
 - Cursor: `.cursor/rules/*.mdc`
 - Claude: `.claude/rules/*.md`
+- OpenCode: `.opencode/rules/*.md`
 - `responsive-design` → globs: `*.tsx`, `*.css`
+- `hexagonal-frontend` → globs: `src/**/*.{ts,tsx}`
 
 **Skills**: Leer el SKILL.md cuando la petición del usuario encaje con la `description`.
 - Cursor: `.cursor/skills/<nombre>/SKILL.md`
 - Claude: `.claude/skills/<nombre>/SKILL.md`
+- OpenCode: `.opencode/skills/<nombre>/SKILL.md`
 
 **Agents**: Delegar cuando la tarea requiera especialista.
-- Cursor: `mcp_task` + `subagent_type` (code-reviewer | test-writer | git-ops | ui-designer | svg-designer | design-verifier)
+- Cursor: `mcp_task` + `subagent_type` (code-reviewer | test-writer | git-ops | ui-designer | svg-designer | design-verifier | hexagonal-guardian)
 - Claude: invocar agent desde `.claude/agents/<nombre>.md`
+- OpenCode: invocar agent desde `.opencode/agents/<nombre>.md`
+
+## OpenCode — Inventario de rutas (fuente de verdad del repo)
+
+### Orquestador principal
+- `.opencode/opencode.json` → `default_agent: project-orchestrator`
+- `project-orchestrator.prompt` → `{file:../AGENTS.md}`
+- `project-orchestrator.permission.task` permite: `code-reviewer`, `design-verifier`, `git-ops`, `hexagonal-guardian`, `svg-designer`, `test-writer`, `ui-designer`, `sdd-*-openai`
+
+### Subagentes (`.opencode/agents/`)
+- `.opencode/agents/code-reviewer.md`
+- `.opencode/agents/design-verifier.md`
+- `.opencode/agents/git-ops.md`
+- `.opencode/agents/hexagonal-guardian.md`
+- `.opencode/agents/svg-designer.md`
+- `.opencode/agents/test-writer.md`
+- `.opencode/agents/ui-designer.md`
+
+### Rules (`.opencode/rules/`)
+- `.opencode/rules/git-workflow.md`
+- `.opencode/rules/hexagonal-frontend.md`
+- `.opencode/rules/i18n.md`
+- `.opencode/rules/imports.md`
+- `.opencode/rules/invitation-checklist.md`
+- `.opencode/rules/nextjs.md`
+- `.opencode/rules/react.md`
+- `.opencode/rules/responsive-design.md`
+- `.opencode/rules/styling.md`
+- `.opencode/rules/svg-design.md`
+- `.opencode/rules/testing.md`
+- `.opencode/rules/typescript.md`
+- `.opencode/rules/ui-design.md`
+
+### Skills (`.opencode/skills/`)
+- `.opencode/skills/component/SKILL.md`
+- `.opencode/skills/design-audit/SKILL.md`
+- `.opencode/skills/finish/SKILL.md`
+- `.opencode/skills/hexagonal-frontend/SKILL.md`
+- `.opencode/skills/invitation-context/SKILL.md`
+- `.opencode/skills/svg-design/SKILL.md`
+- `.opencode/skills/task/SKILL.md`
+- `.opencode/skills/template/SKILL.md`
+- `.opencode/skills/test/SKILL.md`
+- `.opencode/skills/ui-design/SKILL.md`
+- `.opencode/skills/validate/SKILL.md`
 
 ## Project stack
 
@@ -142,6 +197,7 @@ src/
 | Implementar/corregir diseño UI/UX | `ui-design` → `.cursor/skills/ui-design/` | ui-designer |
 | Implementar/modificar SVG, iconos, ilustraciones | `svg-design` → `.cursor/skills/svg-design/` | svg-designer |
 | Verificar diseño UI/UX | `design-audit` → `.cursor/skills/design-audit/` | design-verifier |
+| Migrar/refactor a arquitectura hexagonal frontend | `hexagonal-frontend` → `.cursor/skills/hexagonal-frontend/` / `.claude/skills/hexagonal-frontend/` / `.opencode/skills/hexagonal-frontend/` | hexagonal-guardian para auditoría estricta |
 
 ### Cursor: mcp_task
 
@@ -153,7 +209,19 @@ Delegar sin que el usuario lo pida cuando la tarea lo requiera. Agents en `.curs
 - `subagent_type: "ui-designer"` — implementar diseño siguiendo ui-design skill (Read, Write, Edit)
 - `subagent_type: "svg-designer"` — implementar SVG siguiendo svg-design skill (Read, Write, Edit)
 - `subagent_type: "design-verifier"` — auditar diseño UI/UX solo, sin modificar código (Read, Grep, Glob)
+- `subagent_type: "hexagonal-guardian"` — auditar cumplimiento hexagonal (capas, puertos/adaptadores, Atomic Design y responsive) sin modificar código (Read, Grep, Glob)
 
 ### Claude
 
 Agents definidos en `.claude/agents/`. Delegar con el mecanismo nativo de Claude. Cursor tiene paridad en `.cursor/agents/` con `mcp_task` + `subagent_type`.
+
+### OpenCode
+
+Orquestador principal del proyecto: `project-orchestrator` (definido en `.opencode/opencode.json`).
+
+El orquestador usa este `AGENTS.md` como prompt base y delega en subagentes de `.opencode/agents/` según intención del usuario.
+
+Para arquitectura hexagonal usar:
+- Rule: `.opencode/rules/hexagonal-frontend.md`
+- Skill: `.opencode/skills/hexagonal-frontend/SKILL.md`
+- Agent: `.opencode/agents/hexagonal-guardian.md`

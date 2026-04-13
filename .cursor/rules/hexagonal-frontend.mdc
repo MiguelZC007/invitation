@@ -1,0 +1,72 @@
+---
+description: Enforce strict frontend-friendly hexagonal architecture with Atomic Design and responsive preservation
+globs: "src/**/*.{ts,tsx}"
+alwaysApply: false
+---
+
+# Hexagonal Frontend Rules (Strict)
+
+Aplicar arquitectura hexagonal frontend-friendly de forma estricta sin romper Atomic Design ni responsive.
+
+## 1) Separación obligatoria por capas
+
+- `src/domain/**`: reglas de negocio puras.
+- `src/application/**`: casos de uso/orquestación de dominio.
+- `src/adapters/**`: implementaciones concretas de puertos.
+- `src/ui/**` o `src/components/**` + `src/templates/**`: presentación.
+- `src/app/**`: routing/entrypoints/composición de dependencias.
+
+## 2) Reglas de dependencia (enforcement)
+
+- `domain` NO importa React/Next/browser APIs (`window`, `document`, `localStorage`, `fetch`).
+- `application` depende solo de `domain`.
+- `adapters` implementa puertos de `domain`/`application`.
+- `ui/templates/pages/components` NO contienen lógica de dominio ni acceso directo a infraestructura.
+- `app` solo compone wiring (dependency injection simple), no reglas de negocio.
+
+## 3) Puertos y adaptadores
+
+- Todo acceso a infraestructura (HTTP/storage/SDK/analytics) entra por puerto.
+- Definir contrato primero (puerto) y luego implementación (adaptador).
+- Si cambia infraestructura, no debe cambiar `domain`.
+
+## 4) Prohibiciones explícitas
+
+- ❌ Validaciones de negocio dentro de `page.tsx`, templates o componentes.
+- ❌ `fetch`/SDK directo desde dominio o componentes presentacionales.
+- ❌ Mezclar mappers de infraestructura dentro de entities/value objects.
+
+## 5) Testing por capa
+
+- `domain`: unit tests puros, sin mocks de framework.
+- `application`: unit/contract tests de casos de uso + puertos.
+- `adapters`: integration tests de implementaciones.
+- `ui`: tests de interacción/accesibilidad, no negocio profundo.
+
+## 6) Atomic Design + responsive (obligatorio)
+
+- Atomic Design se conserva en `atoms/molecules/organisms`.
+- Los componentes siguen siendo presentacionales; consumen view-models/casos de uso ya resueltos.
+- Responsive mobile-first (`sm:`, `md:`, `lg:`) se mantiene en UI; no se condiciona layout con lógica de dominio.
+
+## 7) Do / Don't rápidos
+
+### ✅ Do
+
+- `src/domain/invitation/services/ValidateSchedule.ts`
+- `src/application/invitation/use-cases/GetInvitationTimeline.ts`
+- `src/adapters/repositories/InvitationApiRepository.ts`
+
+### ❌ Don't
+
+- `src/app/[locale]/invitation/page.tsx` con reglas de validación complejas.
+- `src/templates/SinglePageInvitation.tsx` llamando APIs directamente.
+- `src/components/organisms/*` parseando DTO de backend con lógica de negocio.
+
+## 8) Checklist de validación rápida para PR
+
+- [ ] No hay imports prohibidos entre capas.
+- [ ] No hay lógica de dominio en UI/App templates/pages.
+- [ ] Cada integración nueva tiene puerto + adaptador.
+- [ ] Se mantiene Atomic Design y responsive.
+- [ ] Tests cubren capas afectadas.
