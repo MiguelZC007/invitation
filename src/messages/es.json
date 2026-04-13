@@ -48,13 +48,22 @@
     "invitationLink": "Ver invitación"
   },
   "birthdayInvitation": {
-    "title": "¡Cumpleaños de [nombre]!",
-    "subtitle": "Te esperamos para celebrar",
-    "welcomeMessage": "Ven a celebrar con nosotros este día especial. Habrá pastel, música y mucha diversión.",
-    "countdownLabel": "Faltan",
-    "targetDateLabel": "15 de junio de 2026, 18:00 h",
-    "farewellMessage": "¡Te esperamos! No faltes a la fiesta.",
-    "invitationLink": "Ver invitación de cumpleaños"
+    "title": "¡Cumpleaños de Génesis!",
+    "subtitle": "Una tarde mágica inspirada en Totoro",
+    "introHeading": "Inicio",
+    "celebrationHeading": "Celebración",
+    "farewellHeading": "Cierre",
+    "introMessage": "Vení a celebrar los 3 años de Génesis con una tarde llena de juegos, risas y sorpresas.",
+    "celebrationMessage": "Te esperamos con torta, música y un bosque encantado para compartir juntos.",
+    "farewellMessage": "Traé tu mejor sonrisa y muchas ganas de festejar. ¡Nos vemos en la fiesta!",
+    "detailsHeading": "Detalles del evento",
+    "dateLabel": "Fecha",
+    "timeLabel": "Hora",
+    "locationLabel": "Lugar",
+    "eventDate": "02/06/2026",
+    "eventTime": "14:00",
+    "eventAddress": "C/ N. Arauco 7",
+    "invitationLink": "Ver invitación de Génesis"
   },
   "christmasInvitation": {
     "title": "Feliz Navidad",

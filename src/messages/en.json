@@ -48,13 +48,22 @@
     "invitationLink": "View invitation"
   },
   "birthdayInvitation": {
-    "title": "[Name]'s Birthday!",
-    "subtitle": "We're waiting for you to celebrate",
-    "welcomeMessage": "Come celebrate with us on this special day. There will be cake, music and lots of fun.",
-    "countdownLabel": "Countdown",
-    "targetDateLabel": "June 15, 2026, 6:00 PM",
-    "farewellMessage": "We're waiting for you! Don't miss the party.",
-    "invitationLink": "View birthday invitation"
+    "title": "Genesis's Birthday!",
+    "subtitle": "A magical Totoro-inspired afternoon",
+    "introHeading": "Welcome",
+    "celebrationHeading": "Celebration",
+    "farewellHeading": "Closing",
+    "introMessage": "Join us to celebrate Genesis turning 3 with games, laughter, and cozy forest vibes.",
+    "celebrationMessage": "There will be cake, music, and a charming woodland setup for everyone to enjoy.",
+    "farewellMessage": "Bring your brightest smile and your party spirit — we can't wait to celebrate together!",
+    "detailsHeading": "Event details",
+    "dateLabel": "Date",
+    "timeLabel": "Time",
+    "locationLabel": "Location",
+    "eventDate": "02/06/2026",
+    "eventTime": "14:00",
+    "eventAddress": "C/ N. Arauco 7",
+    "invitationLink": "View Genesis's invitation"
   },
   "christmasInvitation": {
     "title": "Merry Christmas",
